@@ -1,0 +1,225 @@
+---
+title: "Tarea 10"
+author: "Martin Santamaria"
+date: "13/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Carga de datos
+
+```{r}
+library(MASS)
+data = MASS::birthwt
+```
+
+## Punto 1
+
+```{r}
+str(data)
+head(data, 5)
+#?MASS::birthwt
+```
+
+## Punto 2
+
+```{r}
+levels(factor(data$race))
+levels(factor(data$low))
+t <- table(data$race, data$low, dnn = c("Raza", "Peso_Menor_2.5_kg"))
+t
+
+dimnames(t) <- list(             
+                    Raza = c("Blanca", "Negra", "Otra"),
+                    Peso_Menor_2.5_kg = c("No", "Si")
+                   )
+t
+
+#round(prop.table(t, margin = 1), 3)
+round(prop.table(t, margin = 2), 3)
+```
+
+De los resultados de la tabla anterior, se observa que en las razas Negra y Otra predominan los nacidos
+por debajo de los 2.5 kg en comparación con la raza Blanca.
+
+## Punto 3
+
+```{r fig.align='center'}
+plot(prop.table(t, margin = 1), 
+     main = "Gráfico de mosaico de las variables\n \"Raza\" y \"Peso inferior a 2.5 kg\"",
+     col = c("forestgreen", "firebrick3"),
+     ylab = "Peso Menor a 2.5 kg")
+
+plot(prop.table(t, margin = 2), 
+     main = "Gráfico de mosaico de las variables\n \"Raza\" y \"Peso inferior a 2.5 kg\"",
+     col = c("forestgreen", "firebrick3"),
+     ylab = "Peso Menor a 2.5 kg")
+```
+
+## Punto 4
+
+```{r fig.align='center'}
+barplot(prop.table(t, margin = 1), 
+        beside = TRUE,
+        legend.text = TRUE,
+        args.legend = list(title = "Raza"),
+        col = c("ghostwhite", "burlywood4", "darkgoldenrod1"),
+        main = "Frecuencias relativas de razas en relación con\n peso inferior a 2.5 kg",
+        ylim = c(0, 0.8),
+        xlab = "Peso Menor a 2.5 kg")
+
+barplot(t(prop.table(t, margin = 2)),
+        beside = TRUE,
+        legend.text = TRUE,
+        args.legend = list(
+                           title = "Peso Menor a 2.5 kg", 
+                           x = "top"
+                          ),
+        col = c("forestgreen", "firebrick3"),
+        main = "Frecuencias relativas de pesos inferiores a 2.5 kg\n en relación con las razas",
+        ylim = c(0, 0.6),
+        xlab = "Raza")
+```
+
+## Punto 5
+
+De los resultados plasmados en los gráficos, se observa que en las razas Negra y Otra predominan los nacidos
+por debajo de los 2.5 kg en comparación con la raza Blanca.
+
+## Punto 6
+
+### Par Fumadora - Peso Inferior 2.5 kg
+
+```{r}
+levels(factor(data$smoke))
+tf <- table(data$smoke, data$low, dnn = c("Fuma", "Peso_Menor_2.5_kg"))
+tf
+
+dimnames(tf) <- list(             
+                     Fuma = c("No", "Si"),
+                     Peso_Menor_2.5_kg = c("No", "Si")
+                    )
+tf
+
+round(prop.table(tf, margin = 2), 3)
+```
+
+```{r fig.align='center'}
+plot(prop.table(tf, margin = 2), 
+     main = "Gráfico de mosaico de las variables\n \"Fuma\" y \"Peso inferior a 2.5 kg\"",
+     col = c("azure", "darkgrey"),
+     ylab = "Peso Menor a 2.5 kg")
+```
+
+```{r fig.align='center'}
+barplot(prop.table(tf, margin = 1), 
+        beside = TRUE,
+        legend.text = TRUE,
+        args.legend = list(
+                           title = "Fuma",
+                           x = "top"
+                          ),
+        col = c("azure", "darkgrey"),
+        main = "Frecuencias relativas de fumadoras en relación con\n peso inferior a 2.5 kg",
+        ylim = c(0, 0.8),
+        xlab = "Peso Menor a 2.5 kg")
+
+barplot(t(prop.table(tf, margin = 2)),
+        beside = TRUE,
+        legend.text = TRUE,
+        args.legend = list(
+                           title = "Peso Menor a 2.5 kg", 
+                           x = "top"
+                          ),
+        col = c("forestgreen", "firebrick3"),
+        main = "Frecuencias relativas de pesos inferiores a 2.5 kg\n en relación con las fumadoras",
+        ylim = c(0, 0.8),
+        xlab = "Fuma")
+```
+
+De los resultados plasmados en los gráficos, se observa que en las fumadoras predominan los nacidos
+por debajo de los 2.5 kg en comparación con las no fumadoras.
+
+### Par Hipertensa - Peso Inferior 2.5 kg
+
+```{r}
+levels(factor(data$ht))
+th <- table(data$ht, data$low, dnn = c("Hipertensa", "Peso_Menor_2.5_kg"))
+th
+
+dimnames(th) <- list(
+                     Hipertensa =        c("No", "Si"),
+                     Peso_Menor_2.5_kg = c("No", "Si")
+                    )
+th
+
+round(prop.table(th, margin = 2), 3)
+```
+
+```{r fig.align='center'}
+plot(prop.table(th, margin = 2),
+     main = "Gráfico de mosaico de las variables\n \"Hipertensa\" y \"Peso inferior a 2.5 kg\"",
+     col = c("darkseagreen1", "brown1"),
+     ylab = "Peso Menor a 2.5 kg")
+```
+
+```{r fig.align='center'}
+barplot(prop.table(th, margin = 1),
+        beside = TRUE,
+        legend.text = TRUE,
+        args.legend = list(
+                           title = "Hipertensa",
+                           x = "top"
+                          ),
+        col = c("darkseagreen1", "brown1"),
+        main = "Frecuencias relativas de hipertensas en relación con\n peso inferior a 2.5 kg",
+        ylim = c(0, 0.8),
+        xlab = "Peso Menor a 2.5 kg")
+
+barplot(t(prop.table(th, margin = 2)),
+        beside = TRUE,
+        legend.text = TRUE,
+        args.legend = list(
+                           title = "Peso Menor a 2.5 kg",
+                           x = "topright"
+                          ),
+        col = c("forestgreen", "firebrick3"),
+        main = "Frecuencias relativas de pesos inferiores a 2.5 kg\n en relación con las hipertensas",
+        ylim = c(0, 1.1),
+        xlab = "Hipertensa")
+```
+
+De los resultados plasmados en los gráficos, se observa que en las hipertensas predominan los nacidos
+por debajo de los 2.5 kg en comparación con las no hipertensas.
+
+## Punto 7
+
+```{r}
+tt <- table(data$race, data$smoke, data$low, dnn = c("Raza", "Fuma", "Peso_Menor_2.5_kg"))
+tt
+
+dimnames(tt) <- list(
+                     Raza = c("Blanca", "Negra", "Otra"),
+                     Fuma = c("No", "Si"),
+                     Peso_Menor_2.5_kg = c("No", "Si")
+                    )
+tt
+
+round(prop.table(tt, margin = c(1,2)), 3)
+```
+
+Es interesante notar que la raza Negra y Fumadora tiene un mayor indice de que los bebes nazcan 
+por debajo de los 2.5 kg.
+
+## Punto 8
+
+```{r fig.align='center'}
+plot(prop.table(tt, margin = c(1,2)),
+     main = "Gráfico de mosaico de las variables\n \"Raza\", \"Fuma\" y \"Peso inferior a 2.5 kg\"",
+     col = c("darkolivegreen", "darkorange1"))
+```
+
+Se puede observar la misma relación en el gráfico de mosaico

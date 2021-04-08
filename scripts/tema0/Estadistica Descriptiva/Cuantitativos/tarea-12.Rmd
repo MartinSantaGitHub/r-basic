@@ -1,0 +1,145 @@
+---
+title: "Tarea 12"
+author: "Martin Santamaria"
+date: "26/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Carga el conjunto de datos de la carpeta data llamado grades.txt en R y responde a las siguientes preguntas
+
+```{r}
+df = read.table("../../../../../Data/grades.txt", header = TRUE)
+head(df)
+str(df)
+```
+
+## Punto 1
+
+#### Calcula la media, la mediana y la moda redondeada a dos cifras decimales de las notas numéricas de los exámenes tanto de forma conjunta como por estudio universitario. ¿En qué grupo observamos la nota más alta? ¿Qué grupo está por encima de la media de estudiantes?
+
+**Total de notas**
+
+```{r}
+df$nota.r = round(df$nota, 2)
+
+# Media
+round(mean(df$nota), 2)
+
+# Mediana
+round(median(df$nota), 2)
+
+# Moda
+as.numeric(names(which(table(df$nota.r) == max(table(df$nota.r)))))
+```
+
+**Notas por estudio**
+
+```{r}
+# Media
+f_mean = function(x){round(mean(x), 2)}
+df_mean = aggregate(nota~estudio, data = df, FUN = f_mean)
+df_mean
+
+# Mediana
+f_median = function(x){round(median(x), 2)}
+aggregate(nota~estudio, data = df, FUN = f_median)
+
+# Moda
+f_moda = function(x){
+  as.numeric(names(which(table(x) == max(table(x)))))
+  }
+aggregate(nota.r~estudio, data = df, FUN = f_moda)
+
+# Nota más alta
+f_max = function(x){
+  third_quartil = quantile(x, 0.75)
+  m1 = third_quartil + (1.5 * (third_quartil - quantile(x, 0.25)))
+  m2 = max(x)
+  min(m1,m2)
+    }
+df_max = aggregate(nota~estudio, data = df, FUN = f_max)
+df_max$nota = round(df_max$nota, 2)
+df_max
+
+# Frecuencias relativas por grupos
+te = prop.table(table(df$estudio))
+te
+
+df_sup_mean = df_mean[df_mean$nota > round(mean(df$nota), 2),]
+df_sup_mean
+```
+
+Para hallar la nota más alta se utilizó la siguiente fórmula correspondiente al bigote superior de un gráfico de cajas
+
+$$b_{sup} = min\{M,Q_{0.75} + 1.5(Q_{0.75} - Q_{0.25})\}$$
+
+Se observa la nota más alta en el grupo **`r df_max[which.max(df_max$nota),1]`** con nota **`r df_max[which.max(df_max$nota),2]`**
+
+El grupo con más estudiantes es **`r names(te[which(te == max(te))])`** con un porcentaje del **`r max(te) * 100`** porciento
+
+Los grupos cuyas notas están por encima de la media son **`r df_sup_mean[1,1]`** y **`r df_sup_mean[2,1]`** con notas medias respectivas de **`r df_sup_mean[1,2]`** y **`r df_sup_mean[2,2]`**
+
+Total de estudiantes: **`r length(df$estudio)`**
+
+## Punto 2
+
+#### ¿En qué grupo observamos más variación de notas? Justifica tu respuesta
+
+```{r}
+df_sd = aggregate(nota~estudio, data = df, FUN = sd)
+df_sd
+```
+
+Se observa más variación de notas en el grupo **`r df_sd[which.max(df_sd$nota),1]`** con una desviación típica muestral de **`r round(df_sd[which.max(df_sd$nota),2], 3)`**
+
+La desviación típica nos indica el índice de dispersión que hay de los datos con respecto a la media. Cuanto mayor sea dicho valor, más dispersos están los datos por encima y por debajo de la media.
+
+## Punto 3
+
+#### ¿Hay mucha diferencia entre el grupo que has respondido en el ejercicio 1 y en el ejercicio 2? Intenta dar una explicación objetiva del suceso
+
+La desviación típica nos indica el índice de dispersión que hay de los datos con respecto a la media. Una cosa es la media aritmética y otra la desviación estandar o típica. La media por grupos obtenida en el punto 1, nada dice acerca de la dispersión de los datos.
+
+## Punto 4
+
+#### Dibuja en un único gráfico los cuatro diagramas de caja, uno para cada grupo. Añade así mismo la nota media, pon nombre, título y color al gráfico para documentar el gráfico correctamente.
+
+```{r fig.align = 'center'}
+bp = boxplot(nota~estudio, data = df, 
+             main = "Gráfico de cajas de notas por estudio universitario",
+             xlab = "Estudio",
+             ylab = "Nota",
+             col = c("darkolivegreen", "dodgerblue3", "firebrick1", "darkorchid"))
+medias = aggregate(nota~estudio, data = df, FUN = mean)
+points(medias, col = c("pink"), pch = 15)
+abline(h = 4, col = c("yellow"))
+```
+
+## Punto 5
+
+#### ¿Observas algunos valores atípicos en el boxplot anterior? ¿A qué grupo pertence?
+
+```{r}
+#bp
+bp$out
+bp$group
+```
+
+Se observan algunos valores atípicos correspondientes a los grupos **`r bp$names[bp$group]`** cuyos valores son **`r round(bp$out, 2)`** respectivamente.
+
+## Punto 6
+
+#### Indica a partir del boxplot anterior en qué grupo observamos más variedad de notas.
+
+Por el tamaño de las cajas o rango intercuartílico, se observa que el grupo de **Mates** presenta la mayor variedad de notas, lo que concuerda con la mayor desviación típica calculada anteriormente en el **punto 2** para los grupos.
+
+## Punto 7
+
+#### En base a todo lo anterior, ¿puedes afirmar de forma estadística que el examen de carrera ha ido mejor en algún estudio que en los demás?
+
+Tanto del gráfico de cajas como de los datos calculados anteriormente, se puede observar que el examen en el cual les ha ido mejor a los estudiantes fue en el de **Informática**. Esto es debido a la poca variación que presenta en las notas como así también la media que es levemente inferior a la media máxima por estudio que corresponde al grupo de Mates. Si bien, Mates presenta la nota más alta como la media más alta, también tiene notas más bajas que Informática. 
+A modo de chiste pero muy cierto, en Mates se refleja la realidad misma. O te va muy bien o te va muy mal, sabes o no sabes, es una ciencia exacta. No hay términos medios. Lo digo por experiencia. ;)

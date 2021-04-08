@@ -1,0 +1,59 @@
+---
+title: "People"
+author: "Martin Santamaria"
+date: "11/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Ejemplo de color de ojos y de pelo
+
+```{r}
+HairEyeColor
+
+sum(HairEyeColor) -> total
+```
+
+El total de individuos de la tabla de datos es `r total`.
+
+```{r}
+prop.table(HairEyeColor, margin = 3)
+prop.table(HairEyeColor, margin = c(1,2))
+```
+
+```{r}
+aperm(HairEyeColor, perm = c("Sex", "Hair", "Eye"))
+```
+
+```{r}
+library(kableExtra)
+
+kable(HairEyeColor)
+```
+
+# Tablas a partir de Data Frames
+
+```{r}
+Beb_Energ = read.table("../../../../../Data/EnergyDrink", header = TRUE)
+str(Beb_Energ)
+head(Beb_Energ, 4)
+levels(Beb_Energ$estudio)
+summary(Beb_Energ)
+```
+
+```{r}
+apply(Beb_Energ, MARGIN = 2, FUN = table)
+apply(Beb_Energ, MARGIN = 2, FUN = table)$sexo
+
+table(Beb_Energ$sexo)
+table(Beb_Energ)
+table(Beb_Energ[c(1,3)])
+
+ftable(Beb_Energ)
+```
+
+
+

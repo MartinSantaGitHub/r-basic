@@ -1,0 +1,122 @@
+---
+title: "Tarea 6"
+author: "Martin Santamaria"
+date: "25/1/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## **Ejercicio 1**
+
+### $$y = x^2 -3x + 30$$
+
+```{r fig.align = 'center'}
+curve(x^2 - 3*x + 30, 
+      xlim = c(-15,15), 
+      main = 'Una parábola', 
+      xlab = "x", 
+      ylab = expression(x^2 - 3*x + 30))
+```
+
+## **Ejercicio 2**
+
+Respetando los mismos parámetros que en la función *curve* dan el mismo resultado.
+Eso si. Con la función *plot* no se puede introducir directamente la sentencia de la función a 
+dibujar. Se debe crear una función y almacenarla en una variable para poder dibujarla.
+
+```{r fig.align = 'center'}
+# Almaceno la función en una variable para poder dibujarla con la función 'plot'.
+f <- function(x){ x^2 - 3*x + 30 }
+plot(f, 
+     xlim = c(-15,15), 
+     main = 'Una parábola', 
+     xlab = "x", 
+     ylab = expression(x^2 - 3*x + 30))
+```
+
+```{r fig.align = 'center'}
+I <- -15:15
+plot(I, f(I), 
+     type = "l", 
+     main = 'Una parábola', 
+     xlab = expression(x), 
+     ylab = expression(y = x^2 - 3*x + 30))
+```
+
+## **Ejercicio 3**
+
+### $$y = 5 \cdot 2^x$$
+
+```{r fig.align = 'center'}
+# Utilizo la libreria 'latex2exp' para poder escribir expresiones LaTeX
+# en los labels de los ejes de la curva.
+# https://github.com/stefano-meschiari/latex2exp
+# También se puede utilizar la expresión 'ylab = expression(y = 5 %.% 2^x)'
+library(latex2exp)
+f <- function(x){5 * 2^x}
+curve(f, 
+      xlim = c(-10,25), 
+      xlab = NA, 
+      ylab = TeX("$y = 5 \\cdot 2^x$"), 
+      log = 'y')
+```
+
+## **Ejercicio 4**
+
+### $$\begin{array}{l} y_1 = \hspace{0.8em} 3x \\ y_2 = -3x \end{array}$$
+
+```{r fig.align = 'center'}
+f = function(x){0}
+curve(3 * x, 
+      xlim = c(-10,20), 
+      xlab = NA, 
+      ylab = NA, 
+      col = "blue", 
+      main = "2 Rectas", 
+      sub = "Dos rectas con pendiente opuesto")
+curve(-3 * x, 
+      add = TRUE, 
+      col = "green", 
+      lty = "dashed")
+legend(13, 10, 
+       col = c("blue", "green"), 
+       legend = c(expression(3 * x), expression(-3 * x)), 
+       lty = c("solid", "dashed"), 
+       adj = 1, 
+       x.intersp = 3, 
+       text.width = 0.4)
+```
+
+## **Ejercicios 5 y 6**
+
+### $$\begin{array}{l} y_1 = 0 \\ y_2 = 2x + 7 \end{array}$$
+
+```{r fig.align = 'center'}
+plot(0,0, 
+     xlim = c(-15,15), 
+     ylim = c(-20,40), 
+     xlab = NA, 
+     ylab = NA, 
+     type = "n")
+abline(h = 0, 
+       col = "red", 
+       lwd = 5)
+abline(7,2, 
+       col = "blue", 
+       lwd = 2)
+legend("bottomright", 
+       col = c("red", "blue"), 
+       legend = c(expression(0), expression(2*x + 7)),
+       lty = c("solid", "solid"),
+       lwd = c(5,2))
+text(5,0, 
+     labels = "y = 0", 
+     pos = 3)
+text(5,17, 
+     labels = "y = 2x + 7", 
+     pos = 3, 
+     srt = 29)
+```

@@ -1,0 +1,79 @@
+---
+title: "Pokemon"
+author: "Martin Santamaria"
+date: "28/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+Sys.setenv(RETICULATE_PYTHON = "/Python38")
+library(reticulate)
+```
+
+# Pokemon (Python -> R)
+
+## Carga y limpieza de datos en Python
+
+```{python}
+import pandas as pd
+
+pokemon = pd.read_csv("/Repositories/R/Data/Pokemon.csv")
+pokemon.head()
+pokemon.shape
+
+pokemon = pokemon[pokemon["Generation"] == 1]
+pokemon.shape
+
+pokemon = pokemon[["Type 1", "Type 2", "Speed"]] 
+pokemon.shape
+
+pokemon = pokemon.dropna()
+pokemon.shape
+```
+
+## Transmisión de los datos de Python a R
+
+```{r, fig.width=7, fig.height=4}
+library(ggplot2)
+
+ggplot(data = py$pokemon, aes(x = unlist(py$pokemon["Speed"]), y = ..density..), ) + geom_histogram(breaks=seq(0, 160, by = 20)) + labs(title = "Velocidad de los Pokemon", x = "Speed", y = "Density") + theme(plot.title = element_text(hjust = 0.5))
+
+hist(py$pokemon[,"Speed"], breaks = seq(0, 160, by = 20), main = "Velocidad de los Pokemon", xlab = "Speed", freq = FALSE)
+```
+
+# Pokemon (R -> Python)
+
+## Carga y limpieza de datos en R
+
+```{r}
+library(tidyverse)
+
+pokemon2 <- read.csv("../../../../Data/Pokemon.csv", header = TRUE)
+head(pokemon2, 5)
+
+pokemon2 <- pokemon2 %>%
+  filter(Generation == 1 & Type.1 != "" & Type.2 != "" & Speed != "") %>%
+  select(Type.1, Type.2, Speed)
+  
+str(pokemon2)
+summary(pokemon2)
+```
+
+## Transmisión de los datos de R a Python
+
+```{python}
+import matplotlib.pyplot as plt
+import numpy as np
+
+fig, ax = plt.subplots(1,1)
+fig.set_size_inches(8,8)  
+r.pokemon2.hist(column = 'Speed', color = 'green', bins = np.arange(0, 170, step = 21), density = True, label = "Velocidad de los Pokemon", ax = ax)
+#ax.legend(loc = 'best', frameon = False)
+
+ax.set_ylabel("Density")
+ax.set_xlabel("Speed")
+ax.set_title("Velocidad de los Pokemon")
+
+plt.show()
+```

@@ -1,0 +1,128 @@
+---
+title: "Gráficos"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Gráficos con la función `plot`
+
+```{r}
+x = c(2,4,6,8)
+
+plot(x)
+```
+
+```{r}
+x <- 2^(1:6)
+
+#plot(1:length(x), x)
+plot(x)
+```
+
+### Para representar una función $f(x)$
+
+```{r}
+f <- function(x){ sqrt(x) }
+
+plot(f)
+```
+
+```{r}
+par(mfrow = c(1,2))
+plot = plot(exp(1:20), xlab = 'Indice', ylab = expression(e^{1:20}), main = 'Escala Lineal')
+plotLog = plot(exp(1:20), log = 'y', xlab = 'Indice', ylab = expression(e^{1:20}), main = 'Escala Logaritmica en el eje y')
+points(10,10, col = "red", cex = 4, pch = 16)
+abline(v = 3, lty = 2, col = "dodgerblue")
+```
+
+```{r fig.align = 'center', fig.cap = 'Fibonacci', echo = FALSE}
+n = 1:20
+fib = (1/sqrt(5))*((1+sqrt(5))/2)^n - (1/sqrt(5))*((1-sqrt(5))/2)^n
+
+plot(fib, xlab = 'n', ylab = expression(F(n)), main = 'Sucesión de Fibonacci', 
+     log = 'xy', pch = 21, cex = 2, col = 'deeppink', bg = 'gold', type = 'l', lty = 'dotted', lwd = 4)
+```
+
+```{r}
+plot(n, fib, pch = 21, col = 'red', bg = 'yellow', cex = 1.2, type = "o", main = "Fibonacci", sub = "Subtitle", 
+     lty = "dashed", lwd = 2, xlim = c(1, 10), ylim = c(0, 100), xaxp = c(1,10,3), yaxp = c(0,100,10))
+```
+
+## Cómo añadir elementos a un gráfico
+```{r}
+f <- function(x){
+  x^2 - 2*x + sqrt(abs(x))
+}
+plot(f, xlim = c(-3,3))
+points(0,0, pch = 19)
+points(-3:3, (-3:3)^2, col = "blue")
+abline(2,3, lty = "dashed", col = "red")
+abline(v = 2, lty = "dotted", col = "green")
+abline(h = 5, lty = "dotdash", col = "gray")
+```
+
+```{r}
+f <- function(x){x^2}
+plot(f, xlim = c(-3,3), col = "red", lwd = 2, ylab = expression(y^2), xlab = "x")
+abline(h = 0:9, v = -3:3, lty = "dotted", col = "grey")
+```
+
+```{r}
+plot(tan, xlim = c(-pi, pi), ylim = c(-5,5))
+abline(v = c(-pi/2, pi/2), col = "red")
+```
+
+```{r}
+plot(0,0)
+text(0,0 ,labels = "debajo", pos = 1)
+text(0,0 ,labels = "izquierda", pos = 2)
+text(0,0 ,labels = "arriba", pos = 3)
+text(0,0 ,labels = "derecha", pos = 4)
+points(0,1)
+text(0,1 ,labels = "centro")
+```
+
+```{r}
+f <- function(x){x^2}
+plot(f, xlim = c(-3,3), ylim = c(-10,10))
+points(-3:3, f(-3:3), pch = 19)
+lines(-3:3, f(-3:3), lwd = 2, lty = "dotted", col = "red")
+curve(x^3, lty = "dashed", col = "blue", add = TRUE)
+curve(x^4, lty = "dashed", col = "darkviolet", add = TRUE)
+legend("bottomright", 
+       col = c("red","blue","darkviolet"), 
+       legend=c(expression(x^2),expression(x^3),expression(x^4)), 
+       lwd=3, 
+       bty="o", 
+       lty=c("dotted","dashed","dashed")
+       )
+```
+
+```{r}
+x = c(5*(1:10))
+plot(x,c(exp(-x)+(-1)^x*x/2*sin(x)^2), xlab="", ylab="", main="Gráfico con varios elementos")
+segments(10,0,40,0, col="red", lwd=4)
+arrows(10,0,40,-10, col="blue", length=0.4, angle=5, code=2)
+symbols(40,0, stars=cbind(1,.5,1,.5,1,.5,1,.5,1,.5), add=TRUE, lwd=3, inches=0.5)
+symbols(40,0, stars=cbind(1,.5,1,.5,1,.5,1,.5,1,.5), add=TRUE, lwd=3)
+polygon(c(20,30,40), c(10,-10,10), col="gold", density=4, angle=90, lty=4, lwd=5)
+```
+
+```{r grafico_alumnos, fig.cap="Gráfico de Alumnos y Notas", fig.align='center'}
+alumnos = c(1:10)
+notas = c(2,5,7,9,8,3,5,6,10,7)
+plot(alumnos, notas, main = "Gráfico con texto")
+text(alumnos, notas, labels = c("S","A","N","E","N","S","A","A","E","N"), pos= c(rep(3, times=8),1,3))
+arrows(7,9,9,10, col="blue", length=0.4, angle=5, code=2)
+text(7.7,9.2, labels = "excelent!!!", pos = 3, srt = 17)
+symbols(1,2, circles=0.15, add=TRUE, lwd=1.5, fg="red", inches = FALSE)
+symbols(6,3, circles=0.15, add=TRUE, lwd=1.5, fg="red", inches = FALSE)
+```
+
+
+

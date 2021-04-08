@@ -1,0 +1,77 @@
+---
+title: "Frecuencias"
+author: "Martin Santamaria"
+date: "24/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Frecuencias
+
+```{r}
+edad = c(15,18,25,40,30,29,56,40,13,27,42,23,11,26,25,32,30,40,33,29)
+table(edad)
+
+# Frecuencias Relativas
+round(prop.table(table(edad)), 3)
+
+# Frecuencias Absolutas Acumuladas
+cumsum(table(edad))
+
+# Frecuencias Relativas Acumuladas
+cumsum(prop.table(table(edad)))
+```
+
+```{r}
+set.seed(162017)
+dados = sample(1:6, size = 25, replace = TRUE)
+dados
+set.seed(NULL)
+
+# Frecuencias Absolutas
+table(dados)
+
+# Frecuencias Relativas
+round(prop.table(table(dados)), 2)
+
+# Frecuencias Absolutas Acumuladas
+cumsum(table(dados))
+
+# Frecuencias Relativas Acumuladas
+round(cumsum(prop.table(table(dados))), 2)
+
+dados.df = data.frame(Puntuacion = 1:6,
+                      Fr.abs = as.vector(table(dados)),
+                      Fr.rel = as.vector(round(prop.table(table(dados)), 2)),
+                      Fr.acu = as.vector(cumsum(table(dados))),
+                      Fr.racu = as.vector(round(cumsum(prop.table(table(dados))), 2)))
+dados.df
+```
+
+## Medidas De Centralización
+
+```{r}
+sort(edad)
+length(edad)
+table(edad)
+
+sort(dados)
+```
+
+```{r}
+# Media aritmética
+mean(edad)
+mean(dados)
+
+# Mediana
+median(edad)
+median(dados)
+
+# Moda
+which(table(edad) == max(table(edad)))
+as.numeric(names(which(table(edad) == max(table(edad)))))
+as.numeric(names(which(table(dados) == max(table(dados)))))
+```

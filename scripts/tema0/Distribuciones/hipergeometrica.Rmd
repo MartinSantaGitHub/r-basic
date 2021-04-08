@@ -1,0 +1,92 @@
+---
+title: "Distribución Hipergeométrica"
+author: "Martin Santamaria"
+date: "21/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Distribución Hipergeométrica
+
+Supongamos que tenemos 20 animales, de los cuales 7 son perros. Queremos medir la probabilidad de encontrar un número determinado de perros si elegimos $x = 12$ animales al azar.
+
+## En `R`
+
+```{r}
+library(Rlab)
+M = 7
+N = 13
+k = 12
+plot(dhyper(x = 0:M, m = M, n = N, k = k))
+plot(phyper(q = 0:M, m = M, n = N, k = k))
+qhyper(p = 0.25, m = M, n = N, k = k)
+qhyper(p = 0.50, m = M, n = N, k = k)
+qhyper(p = 0.75, m = M, n = N, k = k)
+plot(0:M, dhyper(x = 0:M, m = M, n = N, k = k), type = 'l', col = "purple", lwd = 1.5)
+hist(rhyper(nn = 10000, m = M, n = N, k = k), breaks = 0:M, freq = FALSE, add = TRUE)
+```
+
+## En `Python`
+
+```{r}
+Sys.setenv(RETICULATE_PYTHON = "/Python38")
+```
+
+```{python}
+from scipy.stats import hypergeom
+import matplotlib.pyplot as plt
+import numpy as np
+
+[M, n, N] = [20, 7, 12]
+rv = hypergeom(M, n, N)
+
+x = np.arange(0, n + 1)
+y = rv.pmf(x)
+
+mean, var, skew, kurt = rv.stats(moments = 'mvsk')
+
+print(f"Media {mean}")
+print(f"Varianza {var}")
+print(f"Sesgo {skew}")
+print(f"Curtosis {kurt}")
+```
+
+```{python}
+fig = plt.figure()
+
+ax = fig.add_subplot(111)
+ax.plot(x, y, 'bo', label = "Distribución de probabilidad de H(13,7,12)")
+ax.vlines(x, 0, y, colors = 'b', lw = 2, alpha = 0.5)
+ax.set_xlabel("Número de perros entre los 12 elegidos al azar")
+
+ax.vlines(x, 0, y, colors = 'k', linestyles = '--', lw = 1, label = "Frozen PMF")
+ax.legend(loc = 'upper left', frameon = False)
+ax.set_ylim([0, 0.45])
+
+plt.show()
+```
+
+```{python}
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+ax.plot(x, rv.cdf(x), 'bo', label = "Función de distribución acumulada de H(13,7,12)")
+
+plt.show()
+```
+
+```{python}
+fig = plt.figure()
+ax = fig.add_subplot(111)
+
+r = rv.rvs(size = 100000)
+x = np.arange(0, n + 2)
+
+ax.hist(r, bins = x, density = True)
+ax.plot(x, rv.pmf(x))
+
+plt.show()
+```

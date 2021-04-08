@@ -1,0 +1,179 @@
+---
+title: "Ejercicios sobre LaTeX, R y Markdown"
+author: "Martin Santamaria"
+date: "13/01/2019"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Preguntas
+
+## Pregunta 1
+
+Realizad los siguientes productos de matrices siguiente en `R`:
+
+$$A\cdot B$$
+$$B\cdot A$$
+$$(A\cdot B)^t$$
+$$B^t\cdot A$$
+$$(A\cdot B)^{-1}$$
+$$A^{-1}\cdot B^t$$
+
+donde 
+
+$$A = \begin{pmatrix} 1 & 2 & 3 & 4\\ 4 & 3 & 2 & 1 \\ 0 & 1 & 0 & 2 \\ 3 & 0 & 4 & 0 \end{pmatrix}\qquad B= \begin{pmatrix} 4 & 3 & 2 & 1\\ 0 & 3 & 0 & 4 \\ 1 & 2 & 3 & 4 \\ 0 & 1 & 0 & 2 \end{pmatrix}$$
+
+Finalmente, escribe haciendo uso de \LaTeX\ el resultado de los dos primeros productos de forma adecuada.
+
+### Creación de las matrices
+```{r matrices}
+# Por comodidad, creo las matrices en una chunk aparte utilizando la función 'rbind'.
+A = rbind(c(1,2,3,4), c(4,3,2,1), c(0,1,0,2), c(3,0,4,0))
+B = rbind(c(4,3,2,1), c(0,3,0,4), c(1,2,3,4), c(0,1,0,2))
+```
+
+### Producto de la matriz A por la matriz B
+```{r AxB}
+# Para realizar el producto entre matrices, se utiliza el %*%.
+# Ademas, almaceno la matriz resultado en la variable AB para utilizarla más tarde.
+AB <- A%*%B
+AB
+```
+
+### Producto de la matriz B por la matriz A
+```{r BxA}
+B%*%A
+```
+
+### Transpuesta del producto de la matriz A por la matriz B
+```{r t(AxB)}
+# La transpuesta se obtiene utilizando la función 't'.
+t(AB)
+```
+
+### Producto de la transpuesta de la matriz B por la matriz A
+```{r t(B)xA}
+# Almaceno la transpuesta de B en la variable tB para utilizarla más tarde.
+tB <- t(B)
+tB%*%A
+```
+
+### Inversa del producto de la matriz A por la matriz B
+```{r inv(AxB)}
+# Con la función 'solve' obtengo la inversa de una matriz.
+solve(AB)
+```
+
+### Producto de la inversa de matriz A por la transpuesta de la matriz B
+```{r inv(A)Xt(B)}
+solve(A)%*%tB
+```
+
+### Resultado en \LaTeX de los dos primeros productos
+$$\text{}$$
+$$A\cdot B = \begin{pmatrix} 7 & 19 & 11 & 29\\ 18 & 26 & 14 & 26 \\ 0 & 5 & 0 & 8 \\ 16 & 17 & 18 & 19 \end{pmatrix}$$
+
+
+$$B\cdot A = \begin{pmatrix} 19 & 19 & 22 & 23\\ 24 & 9 & 22 & 3 \\ 21 & 11 & 23 & 12 \\ 10 & 3 & 10 & 1 \end{pmatrix}$$
+
+
+
+## Pregunta 2
+
+Considerad en un vector los números de vuestro DNI y llamadlo dni. Por ejemplo, si vuestro DNI es
+54201567K, vuestro vector será
+$$dni = (5,4,2,0,1,5,6,7)$$
+Definid el vector en **R**. Calculad con **R** el vector **dni** al cuadrado, la raíz cuadrada del vector **dni** y, por último,
+la suma de todas las cifras del vector **dni**.
+
+Finalmente, escribid todos estos vectores también a \LaTeX\
+
+### Creación del vector *dni*
+```{r dni}
+# Creo el vector 'dni' y almaceno dentro las cifras de mi dni = 30736869.
+dni <- c(3,0,7,3,6,8,6,9)
+dni
+```
+
+### Cálculo del vector *dni* al cuadrado
+```{r dni^2}
+# Elevo al cuadrado el vector 'dni'.
+dni^2
+```
+
+### Cálculo de la raiz cuadrada del vector *dni*
+```{r sqrt(dni)}
+# Aplico la función 'sqrt' al vector 'dni' y redondeo a 2 cifras decimales.
+round(sqrt(dni), 2)
+```
+
+### Suma de todas las cifras del vector *dni*
+```{r sum(dni)}
+# Aplico la función 'sum' al vector 'dni'.
+sum(dni)
+```
+
+### vectores en \LaTeX\
+
+$$\begin{array}{l} dni = (3,0,7,3,6,8,6,9)\\ dni^2 = (9,0,49,9,36,64,36,81) \\ \sqrt{dni} = (1.73,0.00,2.65,1.73,2.45,2.83,2.45,3.00) \\ \sum dni = 42 \end{array}$$
+
+        
+## Pregunta 3
+
+Considerad el vector de las letras de vuestro nombre y apellido. Llamadlo **name**. Por ejemplo, en mi caso sería
+$$nombre = (M,A,R,I,A,S,A,N,T,O,S)$$
+Definid dicho vector en **R**. Calculad el subvector que solo contenga vuestro nombre. Calculad también el
+subvector que contenga solo vuestro apellido. Ordenadlo alfabéticamente. Cread una matriz con este vector.
+
+Redactad todos vuestros resultados y utilizad \LaTeX\ cuando pertoque
+
+
+### Defino al vector *name*
+```{r name}
+# Defino al vector 'name'.
+name = c('M','A','R','T','I','N','S','A','N','T','A','M','A','R','I','A')
+name
+```
+
+### Subvector que contiene mi nombre
+```{r sub_name}
+# Subvector que contiene mi nombre.
+sub_name = name[1:6]
+sub_name
+```
+
+### Subvector que contiene mi apellido
+```{r sub_apellido}
+# Subvector que contiene mi apellido.
+sub_apellido = name[7:length(name)]
+sub_apellido
+```
+
+### Vector *name* ordenado alfabeticamente
+```{r sort_name}
+# Vector 'name' ordenado alfabeticamente.
+sort_name = sort(name)
+sort_name
+```
+
+### Matriz creada a partir del vector *name*
+```{r mat_name}
+# Matriz creada a partir del vector 'name'.
+mat_name = matrix(name, nrow = 4, ncol = 4, byrow = TRUE)
+mat_name
+```
+
+
+### Resultados en \LaTeX\
+
+* name = (M,A,R,T,I,N,S,A,N,T,A,M,A,R,I,A) 
+* sub\_name = (M,A,R,T,I,N) 
+* sub\_apellido = (S,A,N,T,A,M,A,R,I,A) 
+* sort\_name = (A,A,A,A,A,I,I,M,M,N,N,R,R,S,T,T) 
+* mat\_name = $\begin{pmatrix} M & A & R & T\\ I & N & S & A \\ N & T & A & M \\ A & R & I & A \end{pmatrix}$

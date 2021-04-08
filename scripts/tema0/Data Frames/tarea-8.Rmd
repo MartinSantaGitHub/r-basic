@@ -1,0 +1,112 @@
+---
+title: "Tarea 8"
+author: "Martin Santamaria"
+date: "3/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<Br>
+
+```{r Load_Data_Frame}
+df = read.csv("http://winterolympicsmedals.com/medals.csv",
+              header = TRUE)
+str(df)
+```
+
+<Br>
+
+## Pregunta 1
+
+##### ¿Cuantos deportistas aparecen en el data frame?
+
+```{r Pregunta_1}
+cd = nrow(df)
+```
+
+Considerando que cada fila del data frame corresponde a un único deportista, aparecen **`r cd`** deportistas.
+
+<Br>
+
+## Pregunta 2
+
+##### ¿Cuantos han ganado medallas de oro, cuantos de plata y cuantos de bronce?
+
+```{r Pregunta_2}
+levels(df$Medal)
+
+gold_frame = subset(df, Medal == "Gold")
+silver_frame = subset(df, Medal == "Silver")
+bronze_frame = subset(df, Medal == "Bronze")
+```
+
+- Cantidad medallas de *oro*: **`r nrow(gold_frame)`**
+
+
+- Cantidad medallas de *plata*: **`r nrow(silver_frame)`**
+
+
+- Cantidad medallas de *bronce*: **`r nrow(bronze_frame)`**
+
+<Br>
+
+## Pregunta 3
+
+##### ¿En cuantos lugares se han hecho olimpiadas de invierno?
+
+```{r Pregunta_3}
+cl = length(levels(df$City))
+```
+
+Se han hecho olimpiadas de invierno en **`r cl`** lugares diferentes.
+
+<Br>
+
+## Pregunta 4
+
+##### ¿Cuantos hombres y cuantas mujeres hay?
+
+```{r Pregunta_4}
+ch_frame = subset(df, Event.gender == "M")
+cm_frame = subset(df, Event.gender == "W")
+```
+
+Hay **`r nrow(ch_frame)`** hombres y **`r nrow(cm_frame)`** mujeres.
+
+<Br>
+
+## Pregunta 5
+
+##### ¿En qué año participaron más deportistas?
+
+```{r Pregunta_5}
+library(dplyr)
+
+df_max_set = df %>% na.omit() %>% count(Year)
+df_max = subset(df_max_set, n == max(df_max_set$n))
+```
+
+En el año **`r df_max$Year`** participaron más deportistas con un total de **`r df_max$n`** participantes.
+
+<Br>
+
+## Pregunta 6
+
+##### El campo NOC indica el país del ganador de la medalla. ¿Qué país puede presumir de haber ganado más medallas de oro en los juegos de invierno entre 1960 y 1996?
+
+```{r Pregunta_6}
+library(dplyr)
+
+df_NOC = subset(df, Year >= 1960 & Year <= 1996 & Medal == "Gold")
+df_NOC_max_set = df_NOC %>% na.omit() %>% count(NOC)
+
+# Otra manera de filtrar utilizando la librería 'dplyr'
+df_NOC_max = df_NOC_max_set %>% filter(n == max(n))
+```
+
+El país que más medallas ganó entre 1960 y 1996 es **`r df_NOC_max$NOC`** con un total de **`r df_NOC_max$n`** medallas.
+
+<Br>

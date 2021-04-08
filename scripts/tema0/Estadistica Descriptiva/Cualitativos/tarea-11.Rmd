@@ -1,0 +1,97 @@
+---
+title: "Tarea 11"
+author: "Martin Santamaria"
+date: "16/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Punto 1
+
+```{r}
+alumnos = c(rep("Maria", 5), rep("Juan", 3), rep("Martin", 2), rep("Julia", 4), "Roberto")
+```
+
+Frecuencias Absolutas
+
+```{r}
+table(alumnos)
+```
+
+## Punto 2
+
+```{r}
+library(gmodels)
+edades = rev(c(rep(25, 5), rep(31, 3), rep(40, 2), rep(28, 4), 19))
+
+#table(edades)
+#length(edades)
+#length(table(edades))
+#sum(table(edades))
+
+CrossTable(edades, prop.chisq = FALSE)
+```
+
+## Punto 3
+
+```{r}
+altura = c(rep(170, 5), rep(165, 3), rep(180, 2), rep(175, 4), 190)
+peso = rev(c(rep(75, 5), rep(85, 3), rep(70, 2), rep(65, 4), 90))
+table(altura, peso)
+```
+
+## Punto 4
+
+```{r}
+CrossTable(altura, edades, prop.chisq = FALSE)
+
+#prop.table(table(altura, edades))
+#prop.table(table(altura, edades), margin = 1)
+#prop.table(table(altura, edades), margin = 2)
+```
+
+## Punto 5
+
+```{r fig.align='center'}
+barplot(table(edades), 
+        col = c("darkolivegreen4","dodgerblue4", "darkseagreen2", "goldenrod2", "tomato1"),
+        main = "Frecuencias absolutas de edades", 
+        ylim = c(0, 6))
+```
+
+## Punto 6
+
+```{r fig.align='center'}
+pie(table(alumnos), main = "Diagrama circular del vector 'alumnos'")
+```
+
+## Punto 7
+
+```{r fig.align='center'}
+table(DNase$density)
+min(DNase$density)
+max(DNase$density)
+mean(DNase$density)
+
+intervals = cut(DNase$density, breaks = c(0,0.5,1,1.5,2,Inf), right = FALSE, 
+                 labels = c("0-0.5", "0.5-1", "1-1.5", "1.5-2", "2-..."))
+
+DNase$density.rank = ordered(intervals)
+
+str(DNase)
+head(DNase, 5)
+
+barplot(table(DNase$density),
+        col = c("ghostwhite", "burlywood4", "darkgoldenrod1"),
+        main = "Frecuencias absolutas de densidades\n del data frame DNase")
+
+barplot(table(DNase$density.rank),
+        col = c("ghostwhite", "burlywood4", "darkgoldenrod1", "coral", "chartreuse"),
+        main = "Frecuencias absolutas de densidades\n del data frame DNase")
+
+table(DNase$density.rank)
+hist(DNase$density, breaks = c(0,0.5,1,1.5,2,Inf), right = FALSE, plot = FALSE)
+```

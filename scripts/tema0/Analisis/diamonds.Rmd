@@ -1,0 +1,148 @@
+---
+title: "Diamantes"
+author: "Martin Santamaria"
+date: "27/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
+# Análisis de los diamantes
+
+```{python, cache = FALSE}
+import numpy as np
+import pandas as pd
+import matplotlib
+import os
+from ggplot import diamonds
+
+os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = 'C:/Users/msantamaria/AppData/Local/r-miniconda/envs/r-reticulate/Library/plugins'
+matplotlib.style.use("ggplot")
+
+diamonds.shape
+diamonds.head(5)
+```
+
+## Histograma
+
+```{python}
+diamonds.hist(column = 'carat', figsize = (8,8), color = 'blue', bins = 50, range = (0,3.5), density = True)
+diamonds["carat"].plot(kind = "density", figsize = (8,8), xlim = (0,5))
+
+matplotlib.pyplot.show()
+```
+
+## Filtro de outliers
+
+```{python}
+diamonds[diamonds["carat"] > 3.5]
+```
+
+## Boxplots
+
+```{python}
+matplotlib.pyplot.clf()
+
+diamonds.boxplot(column = 'carat', figsize = (8,8))
+
+matplotlib.pyplot.show()
+```
+
+```{python}
+diamonds.boxplot(column = 'price', by = 'clarity', figsize = (8,8))
+
+matplotlib.pyplot.show()
+```
+
+```{python}
+diamonds.boxplot(column = 'carat', by = 'clarity', figsize = (8,8))
+
+matplotlib.pyplot.show()
+```
+
+## Densidades
+
+```{python}
+diamonds["carat"].plot(kind = "density", figsize = (8,8), xlim = (0,5))
+
+matplotlib.pyplot.show()
+```
+
+## Tabla de frecuencias y Barplot
+
+```{python}
+fig, ax = matplotlib.pyplot.subplots()
+
+carat_table = pd.crosstab(index = diamonds["clarity"], columns = np.count_nonzero, colnames = ["count"]) # columns = "count"
+carat_table
+
+carat_table.plot(kind = "bar", figsize = (8,8), ax = ax)
+ax.legend(["count"])
+
+matplotlib.pyplot.show()
+```
+
+```{python}
+carat_table_2 = pd.crosstab(index = diamonds["clarity"], columns = diamonds["color"])
+carat_table_2
+
+carat_table_2.plot(kind = "bar", figsize = (8,8), stacked = True)
+matplotlib.pyplot.show()
+
+carat_table_2.plot(kind = "bar", figsize = (8,8), stacked = False)
+matplotlib.pyplot.show()
+```
+
+## Scatterplot
+
+```{python}
+diamonds.plot(kind = "scatter", x = "carat", y = "price", figsize = (10,10), xlim = (0,6), ylim = (0,20000), alpha = 0.1)
+
+matplotlib.pyplot.show()
+```
+
+## Tamaño y dimensiones
+
+```{python}
+carat = pd.cut(diamonds['carat'], bins = [0,0.5,1,1.5,2,2.5,3,3.5], include_lowest = True, right = False)
+width = pd.cut(diamonds['x'], bins = [0,1,2,3,4,5,6,7,8,9,10], include_lowest = True, right = False)
+length = pd.cut(diamonds['y'], bins = [0,1,2,3,4,5,6,7,8,9,10], include_lowest = True, right = False)
+depth = pd.cut(diamonds['z'], bins = [0,1,2,3,4,5,6], include_lowest = True, right = False)
+
+carat_table_x = pd.crosstab(index = [carat], columns = [width])
+carat_table_y = pd.crosstab(index = [carat], columns = [length])
+carat_table_z = pd.crosstab(index = [carat], columns = [depth])
+
+carat_table_x.plot(kind = 'bar', figsize = (8,8), stacked = True)
+matplotlib.pyplot.show()
+
+carat_table_y.plot(kind = 'bar', figsize = (8,8), stacked = True)
+matplotlib.pyplot.show()
+
+carat_table_z.plot(kind = 'bar', figsize = (8,8), stacked = True)
+matplotlib.pyplot.show()
+
+diamonds.plot(kind = "scatter", x = "carat", y = "x", figsize = (10,10), xlim = (0,6), ylim = (2,11), color = "green", alpha = 0.1)
+matplotlib.pyplot.show()
+
+diamonds.plot(kind = "scatter", x = "carat", y = "y", figsize = (10,10), xlim = (0,6), ylim = (3,11), color = "red", alpha = 0.1)
+matplotlib.pyplot.show()
+
+diamonds.plot(kind = "scatter", x = "carat", y = "z", figsize = (10,10), xlim = (0,6), ylim = (1,8), color = "purple", alpha = 0.1)
+matplotlib.pyplot.show()
+```
+
+## Corte y precio
+
+```{python}
+diamonds_copy = diamonds.copy(deep = True)
+diamonds_copy["cut"] = pd.Categorical(diamonds["cut"])
+cut_price_table = diamonds_copy.pivot_table(["price"], index = ["cut"], aggfunc = np.mean) 
+cut_price_table
+
+cut_price_table.plot(kind = "bar", figsize = (8,8), color = "darkcyan")
+
+matplotlib.pyplot.show()
+```

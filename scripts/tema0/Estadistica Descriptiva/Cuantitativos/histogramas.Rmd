@@ -1,0 +1,117 @@
+---
+title: "Histogramas"
+author: "Martin Santamaria"
+date: "12/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Histogramas
+
+```{r}
+# Histogramas de frecuencias absolutas
+histAbs = function(x,L){
+  h = hist(x, breaks = L, right = FALSE, freq = FALSE,
+           xaxt = "n", yaxt = "n", col = "lightgray",
+           main = "Histograma de frecuencias absolutas",
+           xlab = "Intervalos y marcas de clase", ylab = "Frecuencias absolutas")
+  axis(1, at = L)
+  text(h$mids, h$density / 2, labels = h$counts, col = "purple")
+}
+```
+
+```{r}
+# Histogramas de frecuencias absolutas acumuladas
+histAbsCum = function(x,L){
+  h = hist(x, breaks = L, right = FALSE, plot = FALSE)
+  h$density = cumsum(h$density)
+  plot(h, freq = FALSE,
+       xaxt = "n", yaxt = "n", col = "lightgray",
+       main = "Histograma de frecuencias\n absolutas acumuladas",
+       xlab = "Intervalos", ylab = "Frec. absolutas acumuladas")
+  axis(1, at = L)
+  text(h$mids, h$density / 2, labels = cumsum(h$counts), col = "purple")
+}
+```
+
+```{r}
+# Histogramas de frecuencias relativas
+histRel = function(x,L){
+  h = hist(x, breaks = L, right = FALSE, plot = FALSE)
+  t = round(1.1 * max(max(density(x)[[2]]), h$density) ,2)
+  plot(h, freq = FALSE,
+       xaxt = "n", col = "lightgray",
+       main = "Histograma de frec. relativas\n y curva de densidad estimada",
+       ylim = c(0, t), xlab = "Intervalos", ylab = "Densidades")
+  axis(1, at = L)
+  text(h$mids, h$density / 2, labels = round(h$counts / length(x) ,2), col = "blue")
+  lines(density(x), col = "purple", lwd = 2)
+}
+```
+
+```{r}
+# Histogramas de frecuencias relativas acumuladas
+histRelCum = function(x,L){
+  h = hist(x, breaks = L, right = FALSE, plot = FALSE)
+  h$density = cumsum(h$counts) / length(x)
+  t = round(1.1 * max(max(density(x)[[2]]), h$density) ,2)
+  plot(h, freq = FALSE,
+       xaxt = "n", col = "lightgray",
+       main = "Histograma de frec. rel. acumuladas\n y curva de distribución estimada",
+       ylim = c(0, t), xlab = "Intervalos", ylab = "Frec. relativas acumuladas")
+  axis(1, at = L)
+  text(h$mids, h$density / 2, labels = round(h$density, 2), col = "blue")
+  dens.x = density(x)
+  dens.x$y = cumsum(dens.x$y) * (dens.x$x[2] - dens.x$x[1])
+  lines(dens.x, col = "purple", lwd = 2)
+}
+```
+
+```{r}
+crabs = read.table("../../../../../Data/datacrab.txt", header = TRUE)
+cw = crabs$width
+```
+
+```{r}
+p = 0.1
+n = length(cw)
+n
+As = 3.5 * sd(cw) * n^(-1/3)
+k = ceiling(diff(range(cw)) / As)
+k
+A = diff(range(cw)) / k
+A
+A = 1.3
+```
+
+```{r}
+L = min(cw) - p/2 + A * (0:k)
+```
+
+```{r}
+#par(mfrow = c(1,2))
+histAbs(cw, L)
+rug(cw)
+```
+
+```{r}
+histAbs(cw, L)
+rug(jitter(cw,2))
+```
+
+```{r}
+histAbsCum(cw, L)
+```
+
+```{r}
+histRel(cw, L)
+curve(dnorm(x, mean(cw), sd(cw)), col = "cyan4", lty = 4, lwd = 2, add = TRUE)
+legend("topright", lwd = c(2,2), lty = c(1,4), col = c("purple", "cyan4"), legend = c("Densidad Estimada", "Densidad Normal"))
+```
+
+```{r}
+histRelCum(cw, L)
+```

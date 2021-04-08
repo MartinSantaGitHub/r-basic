@@ -1,0 +1,58 @@
+---
+title: "Documentación de Texto"
+output: pdf_document
+---
+
+# Titulo 1 
+
+## Titulo 2
+
+### Titulo 3
+
+Esto es un texto llano. Código en `R` y \LaTeX.
+
+Esto sería una *nueva* _linea_ de texto.
+
+Esto sería otra **nueva** ___linea___ de texto.
+
+Esto tiene superíndice: nota^2^
+
+Tachamos una ~~palabra~~.
+
+Esto es un link: [W3School](https://www.w3schools.com/)
+
+endash: -- Y entonces el leon dijo: ...
+
+emdash: ... --- como así lo quería decir.
+
+elipsis: ...
+
+ecuaciones en línea $S = \pi\cdot r^2$.
+
+***
+
+![](../../../images/hotair_noun_002_18218.jpg)
+
+Esto es otra sección
+
+> Esto es una cita
+
+### Listas no ordenadas
+
+* Item 1
+    + Sub item 1
+    + Sub item 2
+* Item 2
+
+### Listas ordenadas
+
+1. Item 1
+    + Sub item 1
+2. Item 2
+1. Item 3
+
+Alumno        |   Nota
+--------------|------------
+Martin        |   8.5
+Ricardo       |   5.5
+María         |   7.0

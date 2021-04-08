@@ -1,0 +1,69 @@
+---
+title: "Probabilidad y Estadistica"
+author: "Martin Santamaria"
+date: "24/1/2020"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## $$\underline{\mathbf{Probabilidad}}$$
+
+\vspace{1em}
+
+#### $\underline{\mathbf{Propiedades}}$
+
+$$ $$
+
+* $P(A \cup B) = P(A) + P(B) - P(A \cap B)$
+  
+  Donde $P(A \cap B) = 0$ si $A$ y $C$ son mutuamente excluyentes.
+  
+\vspace{1em}
+  
+* $P(S) = 1$ y $P(\emptyset) = 0$
+
+\vspace{1em}
+
+* $P(A) = 1 - P(A')$
+
+\vspace{1em}
+
+* Si $A\subset B$ entonces $P(A) \le P(B)$
+
+\vspace{1em}
+
+#### $\underline{\mathbf{Probabilidad\ Condicional}}$
+
+$$ $$
+
+$P\left(\dfrac{A}{B}\right) = \dfrac{P(A \cap B)}{P(A)}$ \hspace{2em} Si $P(A) > 0$
+
+\vspace{2em}
+
+#### $\underline{\mathbf{Regla\ de\ la\ multiplicación}}$
+
+$$ $$
+
+$P(A \cap B) = P(A) \cdot P\left(\dfrac{B}{A}\right)$
+
+$P(A \cap B) = P(B) \cdot P\left(\dfrac{A}{B}\right)$
+
+$P(A \cap B) = P(A) \cdot P(B)$ \hspace{2em} Si $A$ y $B$ son sucesos **independientes**
+
+\vspace{1em}
+
+Si los sucesos $A_1, A_2,...,A_n$ son independientes, se cumple:
+
+\vspace{1em}
+
+$P(A_i \cap A_j) = P(A_i) \cdot P(A_j)$ \hspace{0.6em} $\forall i \ne j;...;n$
+
+ \hspace{5em} $\vdots$
+
+$P(A_1 \cap A_2 \cap ... \cap A_n) = P(A_1) \cdot P(A_2)\ ...\ P(A_n)$

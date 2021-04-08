@@ -1,0 +1,47 @@
+---
+title: "Regresion Lineal"
+author: "Martin Santamaria"
+date: "14/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Regresión Lineal
+
+```{r}
+body = read.table("../../../../Data/bodyfat.txt", header = TRUE)
+head(body,3)
+```
+
+```{r}
+body2 = body[,c(2,4)]
+names(body2) = c("Grasa","Peso")
+str(body2)
+head(body2,3)
+```
+
+```{r}
+plot(body2)
+```
+
+$$y = ax + b$$
+
+```{r}
+lm(body2$Peso~body2$Grasa)
+lm(Peso~Grasa, data = body2)
+```
+
+
+$$y = 2.151x + 137.738$$
+```{r}
+plot(body2)
+abline(lm(Peso~Grasa, data = body2), col = "purple")
+```
+
+```{r}
+summary(lm(Peso~Grasa, data = body2))
+summary(lm(Peso~Grasa, data = body2))$r.squared
+```

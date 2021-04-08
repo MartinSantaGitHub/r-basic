@@ -1,0 +1,75 @@
+---
+title: "Tablas de Contingencia"
+author: "Martin Santamaria"
+date: "6/2/2020"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Tablas de Contingencia
+
+```{r}
+datos = factor(c("H", "M", "M", "M", "H", "H", "M", "M"), levels = c("H", "M"))
+# Obtengo la tabla de contingencia
+t1 = table(datos)
+t1
+t1["M"]
+sum(t1)
+length(datos)
+```
+
+# Frecuencias Relativas
+
+$$f_i = \frac{n_i}{n}$$
+
+```{r}
+moda <- function(d){
+  t = table(d)
+  
+  names(which(t == max(t)))
+}
+prop.table(t1)
+100 * prop.table(t1)
+t1 / length(datos)
+names(which(t1 == 3))
+names(which(t1 == max(t1)))
+```
+
+La moda de los datos es: `r moda(datos)`.
+
+# Paquete `gmodels`
+```{r}
+library(gmodels)
+
+sex = factor(c("H", "M", "M", "M", "H", "H", "M", "M"), levels = c("H", "M"))
+ans = factor(c("S", "N", "S", "S", "S", "N", "N", "S"))
+
+CrossTable(sex, ans, prop.chisq = FALSE)
+```
+
+# Suma por filas y columnas
+```{r results='asis'}
+library(xtable)
+
+tt <- table(sex, ans)
+tt # Frec. Absolutas 
+prop.table(tt) # Frec. Rel. Global
+prop.table(tt, margin = 1) # Frec. Rel. Por Sexo
+prop.table(tt, margin = 2) # Frec. Rel. Por Respuesta
+
+colSums(tt)
+rowSums(tt)
+colSums(prop.table(tt))
+rowSums(prop.table(tt))
+
+apply(tt, FUN = sum, MARGIN = 1)
+apply(tt, FUN = sqrt, MARGIN = c(1,2))
+
+xtable(tt)
+```
+

@@ -1,0 +1,82 @@
+---
+title: "Distribución Normal"
+author: "Martin Santamaria"
+date: "23/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Distribución Normal
+
+Supongamos que $X\sim N(3,0.5)$ entonces podemos estudiar sus parámetros.
+
+## En `R`
+
+```{r}
+mu = 3
+sig = 0.5
+x = seq(0, 6, by = 0.05)
+
+hist(rnorm(100000, mean = mu, sd = sig), freq = FALSE, main = NULL, xlab = '', xlim = c(0,6))
+lines(x, dnorm(x, mean = mu, sd = sig), type = 'l', col = 'red', lwd = 5)
+legend("topright",
+       col = c("red"),
+       legend=c("Función de Densidad\nde una N(3,0.5)"),
+       lwd=5,
+       bty="n"
+       )
+
+plot(pnorm(q = x, mean = mu, sd = sig), type = 'l', xaxt = 'n', lwd = 2, col = 'blue',
+     main = "Función de Distribución Acumulada de una N(3,0.5)",
+     xlab = '',
+     ylab = '')
+axis(1, at = c(0,20,40,60,80, 100, 120), labels = c('0','1','2','3','4','5','6'))
+ 
+qnorm(0.25, mean = mu, sd = sig)
+qnorm(0.50, mean = mu, sd = sig)
+qnorm(0.75, mean = mu, sd = sig)
+```
+
+## En `Python`
+
+```{r}
+Sys.setenv(RETICULATE_PYTHON = "/Python38")
+```
+
+```{python}
+from scipy.stats import norm
+import matplotlib.pyplot as plt
+import numpy as np
+
+fig, ax = plt.subplots(1,1)
+
+mu = 3
+sig = 0.5
+rv = norm(loc = mu, scale = sig)
+x = np.linspace(0, 6, 120)
+r = rv.rvs(size = 100000)
+mean, var, skew, kurt = rv.stats(moments = 'mvsk')
+
+print(f"Media {mean}")
+print(f"Varianza {var}")
+print(f"Sesgo {skew}")
+print(f"Curtosis {kurt}")
+
+ax.plot(x, rv.pdf(x), 'r-', lw = 5, alpha = 0.6, label = "Función de Densidad\nde una N(3,0.5)")
+ax.hist(r, density = True, histtype = 'stepfilled', alpha = 0.2, bins = 25)
+ax.legend(loc = 'best', frameon = False)
+
+plt.show()
+```
+
+```{python}
+fig, ax = plt.subplots(1,1)
+
+ax.plot(x, rv.cdf(x), lw = 2, label = "Función de Distribución\nAcumulada de una N(3,0.5)")
+ax.legend(loc = 'best', frameon = False)
+
+plt.show()
+```

@@ -1,0 +1,187 @@
+---
+title: "Coches"
+author: "Martin Santamaria"
+date: "29/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = FALSE)
+Sys.setenv(RETICULATE_PYTHON = "/Python38")
+library(reticulate)
+```
+
+## Análisis de los coches (mtcars)
+
+### Carga de datos
+
+```{python}
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+from ggplot import mtcars
+
+type(mtcars)
+
+data = mtcars
+data.index = data["name"]
+data.head()
+```
+
+```{r}
+summary(py$data)
+```
+
+### Medidas de centralización
+
+```{python}
+data.mean() # Media por columnas
+data.mean(axis = 1) # Media por filas
+data.median()
+data.mode()
+```
+
+### Medidas vs distribuciones
+
+```{python}
+plt.clf()
+
+norm_data = pd.DataFrame(np.random.normal(size = 100000))
+norm_data.plot(kind = 'density', figsize = (10,10))
+
+plt.vlines(norm_data.mean(), ymin = 0, ymax = 0.4, linewidth = 5.0, color = "green")
+plt.vlines(norm_data.median(), ymin = 0, ymax = 0.4, linewidth = 1.5, color = "red")
+
+plt.show()
+
+plt.clf()
+
+skewed_data = pd.DataFrame(np.random.exponential(size = 100000))
+skewed_data.plot(kind = 'density', figsize = (10,10), xlim = (-1,5))
+
+plt.vlines(skewed_data.mean(), ymin = 0, ymax = 1.0, linewidth = 5.0, color = "green")
+plt.vlines(skewed_data.median(), ymin = 0, ymax = 1.0, linewidth = 1.5, color = "red")
+
+plt.show()
+
+norm_data = np.random.normal(size = 50)
+outliers = np.random.normal(15, size = 3)
+combined_data = pd.DataFrame(np.concatenate((norm_data, outliers), axis = 0))
+
+combined_data.plot(kind = 'density', figsize = (10,10), xlim = (-5,20))
+
+plt.vlines(combined_data.mean(), ymin = 0, ymax = 0.3, linewidth = 5.0, color = "green")
+plt.vlines(combined_data.median(), ymin = 0, ymax = 0.3, linewidth = 1.5, color = "red")
+
+plt.show()
+```
+
+### Millas por Galón
+
+```{python}
+data["mpg"].plot(kind = 'density', figsize = (10,10))
+
+plt.vlines(data["mpg"].mean(), ymin = 0, ymax = 0.08, linewidth = 5.0, color = "green")
+plt.vlines(data["mpg"].median(), ymin = 0, ymax = 0.08, linewidth = 1.5, color = "red")
+
+plt.show()
+```
+
+### Potencia en HP
+
+```{python}
+data["hp"].plot(kind = 'density', figsize = (10,10))
+
+plt.vlines(data["hp"].mean(), ymin = 0, ymax = 0.006, linewidth = 5.0, color = "green")
+plt.vlines(data["hp"].median(), ymin = 0, ymax = 0.006, linewidth = 1.5, color = "red")
+
+plt.show()
+```
+
+La distribución de los valores de las **millas por galón** presentan un leve sesgo hacia la derecha mientras que el sesgo hacia la derecha es más notorio en la distribución de los valores de la **potencia en HP**.
+
+### Medidas de dispersión
+
+- Rango de `mpg`, five nums, cuartiles
+
+```{python}
+rang = np.max(data["mpg"]) - np.min(data["mpg"])
+rang
+
+five_nums = [data["mpg"].quantile(0), 
+             data["mpg"].quantile(0.25),
+             data["mpg"].quantile(0.50),
+             data["mpg"].quantile(0.75),
+             data["mpg"].quantile(1.0)]
+five_nums
+
+data["mpg"].describe()
+
+iqr = data["mpg"].quantile(0.75) - data["mpg"].quantile(0.25)
+iqr
+
+plt.clf()
+
+data.boxplot(column = "mpg", return_type = "axes", figsize = (10,10))
+
+plt.text(x = 0.75, y = data["mpg"].quantile(0.25), s = "1er cuartil")
+plt.text(x = 0.75, y = data["mpg"].median(), s = "Mediana")
+plt.text(x = 0.75, y = data["mpg"].quantile(0.75), s = "3er cuartil")
+
+plt.text(x = 0.75, y = data["mpg"].min(), s = "Min")
+plt.text(x = 0.75, y = data["mpg"].max(), s = "Max")
+
+plt.text(x = 0.65, y = data["mpg"].median(), s = "IQR", rotation = 90, size = 25)
+
+plt.show()
+```
+
+- Varianza y desviación típica
+
+```{python}
+data["mpg"].var()
+data["mpg"].std()
+
+mad = abs(data["mpg"] - data["mpg"].median())
+k = 1.4826
+sd_estimation = mad.median() * k
+sd_estimation
+
+np.sqrt(np.sum((data["mpg"] - data["mpg"].mean())**2)/len(data["mpg"]))
+```
+
+- El sesgo y la curtosis
+
+```{python}
+data["mpg"].skew()
+data["mpg"].kurt()
+```
+
+```{python}
+norm = np.random.normal(size = 100000)
+skew = np.concatenate((np.random.normal(size = 35000) + 2,
+                       np.random.exponential(size = 65000)),
+                       axis = 0)
+unif = np.random.uniform(-2,2, size = 100000)
+peak = np.concatenate((np.random.exponential(size = 50000),
+                       np.random.exponential(size = 50000) * (-1)),
+                       axis = 0)
+
+df = pd.DataFrame({
+  "normal": norm,
+  "skew": skew,
+  "unif": unif,
+  "peak": peak
+})
+
+plt.clf()
+
+df.plot(kind = "density", figsize = (10,10), xlim = (-5,5))
+
+plt.show()
+
+print(f"Normal, Sesgo = {df['normal'].skew()}, Curtosis = {df['normal'].kurt()}")
+print(f"Normal + Exp, Sesgo = {df['skew'].skew()}, Curtosis = {df['skew'].kurt()}")
+print(f"Uniforme, Sesgo = {df['unif'].skew()}, Curtosis = {df['unif'].kurt()}")
+print(f"Suma de Exp, Sesgo = {df['peak'].skew()}, Curtosis = {df['peak'].kurt()}")
+```

@@ -1,0 +1,81 @@
+---
+title: "Binomial Negativa"
+author: "Martin Santamaria"
+date: "21/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Distribución Binomial Negativa
+
+Supongamos que $X$ modela el número de fósforos que hay que extraer para vaciar una de dos cajas. $p = 0.3$.
+
+## En `R`
+
+```{r}
+p = 0.50
+r = 10
+plot(0:30, dnbinom(x = 0:30, size = r, prob = p), ylim = c(0, 0.10))
+plot(0:30, pnbinom(q = 0:30, size = r, prob = p))
+qnbinom(0.25, size = r, prob = p)
+qnbinom(0.50, size = r, prob = p)
+qnbinom(0.75, size = r, prob = p)
+plot(0:30, dnbinom(x = 0:30, size = r, prob = p), type = 'l', col = 'purple', lwd = 1.5, ylim = c(0, 0.10))
+hist(rnbinom(10000, size = r, prob = p), freq = FALSE, add = TRUE)
+```
+
+## En `Python`
+
+```{r}
+Sys.setenv(RETICULATE_PYTHON = "/Python38")
+```
+
+```{python}
+from scipy.stats import nbinom
+import matplotlib.pyplot as plt
+import numpy as np
+
+fig, ax = plt.subplots(1,1)
+
+p = 0.5
+n = 10
+x = np.arange(0, 31)
+mean, var, skew, kurt = nbinom.stats(n, p, moments = 'mvsk')
+
+print(f"Media {mean}")
+print(f"Varianza {var}")
+print(f"Sesgo {skew}")
+print(f"Curtosis {kurt}")
+
+ax.plot(x, nbinom.pmf(x, n, p), 'bo', ms = 8, label = "BN(10, 0.5)")
+ax.vlines(x, 0, nbinom.pmf(x, n, p), colors = 'b', lw = 4, alpha = 0.5)
+ax.vlines(x, 0, nbinom.pmf(x, n, p), colors = 'k', linestyle = '--', lw = 1, label = "Frozen PMF")
+ax.legend(loc = 'best', frameon = False)
+
+plt.show()
+```
+
+```{python}
+fig, ax = plt.subplots(1,1)
+
+ax.plot(x, nbinom.cdf(x, n, p), 'bo', label = "Función de distribución acumulada de BN(5, 0.5)")
+
+plt.show()
+```
+
+```{python}
+fig, ax = plt.subplots(1,1)
+
+r = nbinom.rvs(n, p, size = 100000)
+x = np.arange(0, 36)
+
+ax.hist(r, density = True)
+ax.plot(x, nbinom.pmf(x, n, p))
+ax.set_xlim(0, 35)
+ax.set_ylim(0, 0.10)
+
+plt.show()
+```

@@ -1,0 +1,79 @@
+---
+title: "Distribución de Poisson"
+author: "Martin Santamaria"
+date: "21/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Distribución de Poisson
+
+Supongamos que $X$ modela el número de errores por página que tiene un valor esperado $\lambda = 5$.
+
+## En `R`
+
+```{r}
+l = 5
+plot(0:20, dpois(x = 0:20, lambda = l))
+plot(0:20, ppois(q = 0:20, lambda = l))
+qpois(0.25, l)
+qpois(0.50, l)
+qpois(0.75, l)
+plot(0:20, dpois(x = 0:20, lambda = l), type = 'l', col = 'purple', lwd = 1.5, ylim = c(0, 0.20))
+hist(rpois(10000, l), freq = FALSE, add = TRUE)
+```
+
+## En `Python`
+
+```{r}
+Sys.setenv(RETICULATE_PYTHON = "/Python38")
+```
+
+```{python}
+from scipy.stats import poisson
+import matplotlib.pyplot as plt
+import numpy as np
+
+fig, ax = plt.subplots(1,1)
+
+mu = 5
+x = np.arange(0, 13)
+mean, var, skew, kurt = poisson.stats(mu, moments = 'mvsk')
+
+print(f"Media {mean}")
+print(f"Varianza {var}")
+print(f"Sesgo {skew}")
+print(f"Curtosis {kurt}")
+
+ax.plot(x, poisson.pmf(x, mu), 'bo', ms = 8, label = "Poisson(5.0)")
+ax.vlines(x, 0, poisson.pmf(x, mu), colors = 'b', lw = 4, alpha = 0.5)
+ax.vlines(x, 0, poisson.pmf(x, mu), colors = 'k', linestyle = '--', lw = 1, label = "Frozen PMF")
+ax.legend(loc = 'best', frameon = False)
+
+plt.show()
+```
+
+```{python}
+fig, ax = plt.subplots(1,1)
+
+ax.plot(x, poisson.cdf(x, mu), 'bo', label = "Función de distribución acumulada de Poisson(5.0)")
+
+plt.show()
+```
+
+```{python}
+fig, ax = plt.subplots(1,1)
+
+r = poisson.rvs(mu, size = 1000000)
+x = np.arange(0, 21)
+
+ax.hist(r, density = True)
+ax.plot(x, poisson.pmf(x, mu))
+ax.set_xlim(0, 20)
+ax.set_ylim(0, 0.20)
+
+plt.show()
+```

@@ -1,0 +1,78 @@
+---
+title: "Distribucón Exponencial"
+author: "Martin Santamaria"
+date: "23/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Distribución Exponencial
+
+## En `R`
+
+```{r}
+lam = 3
+x = seq(0, 2, length = 1000)
+
+hist(rexp(100000, rate = lam), freq = FALSE, ylim = c(0,3), main = NULL, xlab = '')
+lines(x, dexp(x, rate = lam), type = 'l', col = 'red', lwd = 5)
+legend("topright", 
+       col = c("red"), 
+       legend=c("Función de Densidad de Exp(3)"), 
+       lwd=5, 
+       bty="n"
+       )
+
+plot(pexp(q = x, rate = lam), type = 'l', xaxt = 'n', xlim = c(0,850), lwd = 2, col = 'blue', 
+     main = "Función de Distribución Acumulada de Exp(3)",
+     xlab = '',
+     ylab = '')
+axis(1, at = c(0,200,400,600,800), labels = c('0','1','2','3','4'))
+
+qexp(0.25, rate = lam)
+qexp(0.50, rate = lam)
+qexp(0.75, rate = lam)
+```
+
+## En `Python`
+
+```{r}
+Sys.setenv(RETICULATE_PYTHON = "/Python38")
+```
+
+```{python}
+from scipy.stats import expon
+import matplotlib.pyplot as plt
+import numpy as np
+
+fig, ax = plt.subplots(1,1)
+
+lam = 3
+rv = expon(scale = 1 / lam)
+x = np.linspace(0, 2, 1000)
+r = rv.rvs(size = 100000)
+mean, var, skew, kurt = rv.stats(moments = 'mvsk')
+
+print(f"Media {mean}")
+print(f"Varianza {var}")
+print(f"Sesgo {skew}")
+print(f"Curtosis {kurt}")
+
+ax.plot(x, rv.pdf(x), 'r-', lw = 5, alpha = 0.6, label = "Función de Densidad de Exp(3)")
+ax.hist(r, density = True, histtype = 'stepfilled', alpha = 0.2, bins = 25)
+ax.legend(loc = 'best', frameon = False)
+
+plt.show()
+```
+
+```{python}
+fig, ax = plt.subplots(1,1)
+
+ax.plot(x, rv.cdf(x), lw = 2, label = "Función de Distribución Acumulada de Exp(3)")
+ax.legend(loc = 'best', frameon = False)
+
+plt.show()
+```

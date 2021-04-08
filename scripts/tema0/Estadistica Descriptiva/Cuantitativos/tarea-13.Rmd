@@ -1,0 +1,155 @@
+---
+title: "Tarea 13"
+author: "Martin Santamaria"
+date: "29/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Datos Iniciales
+
+```{r}
+crabs = read.table("../../../../../Data/datacrab.txt", header = TRUE)
+str(crabs)
+cw = crabs$width
+head(cw, 5)
+n = length(cw)
+n
+```
+
+## Punto 1
+
+#### Número de clases
+
+```{r}
+As = 3.5 * sd(cw) * n^(-1/3)
+k_sc = ceiling(diff(range(cw)) / As)
+k_sc
+```
+
+#### Amplitud
+
+```{r}
+A = diff(range(cw)) / k_sc
+A
+A = 1.3
+```
+
+#### Extremos de los intervalos
+
+```{r}
+L1 = min(cw) - 1/2 * 0.1
+L1
+L = L1 + A * (0:k_sc)
+L
+```
+
+#### Marcas de clases
+
+```{r}
+X = (L[1:length(L)-1] + L[2:length(L)]) / 2
+X
+```
+
+## Punto 2
+
+#### Número de clases
+
+```{r}
+k_r = ceiling(sqrt(n))
+k_r
+```
+
+#### Amplitud
+
+```{r}
+A = diff(range(cw)) / k_r
+A
+A = 0.9
+```
+
+#### Extremos de los intervalos
+
+```{r}
+L1 = min(cw) - 1/2 * 0.1
+L1
+L = L1 + A * (0:k_r)
+L
+```
+
+#### Marcas de clases
+
+```{r}
+X = (L[1:length(L)-1] + L[2:length(L)]) / 2
+X
+```
+
+## Punto 3
+
+#### Número de clases
+
+```{r}
+k_st = ceiling(1 + log(n, 2))
+k_st
+```
+
+#### Amplitud
+
+```{r}
+A = diff(range(cw)) / k_st
+A
+A = 1.4
+```
+
+#### Extremos de los intervalos
+
+```{r}
+L1 = min(cw) - 1/2 * 0.1
+L1
+L = L1 + A * (0:k_st)
+L
+```
+
+#### Marcas de clases
+
+```{r}
+X = (L[1:length(L)-1] + L[2:length(L)]) / 2
+X
+```
+
+## Punto 4
+
+#### Número de clases
+
+```{r}
+Afd = 2 * (quantile(cw, 0.75, names = FALSE) - quantile(cw, 0.25, names = FALSE)) * n^(-1/3)
+k_fd = ceiling(diff(range(cw)) / Afd)
+k_fd
+```
+
+#### Amplitud
+
+```{r}
+A = diff(range(cw)) / k_fd
+A
+A = 1
+```
+
+#### Extremos de los intervalos
+
+```{r}
+L1 = min(cw) - 1/2 * 0.1
+L1
+L = L1 + A * (0:k_fd)
+L
+```
+
+#### Marcas de clases
+
+```{r}
+X = (L[1:length(L)-1] + L[2:length(L)]) / 2
+X
+```

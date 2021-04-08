@@ -1,0 +1,55 @@
+---
+title: "Diagramas"
+author: "Martin Santamaria"
+date: "11/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Diagramas
+
+```{r}
+resp = factor(sample(c("Si", "No"), size = 12, replace = TRUE), levels = c("Si", "No"))
+sex = factor(sample(c("H", "M"), size = length(resp), replace = TRUE), levels = c("H", "M"))
+```
+
+### Barras
+
+```{r}
+barplot(table(sex), col = c("lightblue", "pink"), main = "Diagrama de barras de\n las frecuencias absolutas\n de la variable \"Sexo\"")
+barplot(prop.table(table(resp)), main = "Diagrama de barras de frecuencias relativas\n de la variable \"Respuestas\"")
+```
+
+```{r}
+par(mfrow = c(1,2))
+barplot(table(resp), col = c("green"))
+barplot(table(resp), col = c("red","blue"))
+
+barplot(table(sex), horiz = TRUE)
+
+t1 <- table(sex, resp)
+t1 
+
+barplot(t1, legend.text = TRUE, beside = TRUE)
+barplot(t(table(sex, resp)), beside = TRUE, names = c("Men", "Women"),
+        col = c("yellow", "lightblue"), legend.text = c("Yes", "No"))
+```
+
+### Tarta
+
+```{r}
+x = c(4,2,3,5,1,4,3,1,5,2,3,2)
+
+pie(table(x), main = "Diagrama circular de la variable x")
+pie(table(resp), main = "Diagrama circular de la variable 'resp'")
+```
+
+### Mosaico
+
+```{r}
+plot(table(sex, resp), main = "Gráfico de mosaico de las variables\n \"Sexo\" y \"Respuestas\"")
+plot(HairEyeColor, main = "Gráfico de mosaico de la tabla HairEyeColor", col = c("pink", "lightblue"))
+```

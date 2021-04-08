@@ -1,0 +1,688 @@
+---
+title: "Tarea 14"
+author: "Martin Santamaria"
+date: "24/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+Sys.setenv(RETICULATE_PYTHON = "/Python38")
+```
+
+### Fórmula de estandarizado de una distribución normal
+
+<br>
+
+$$P\left(\mathcal{Z} \le \frac{\mathcal{X} - \mu}{\sigma}\right)$$
+
+### Punto 1
+
+La cantidad de tiempo (en horas) utilizada para completar un producto determinado sigue una distribución N(10, 2) . Calculad la probabilidad de que se tarde:
+
+a) Menos de 6 horas
+
+b) Entre 7 y 13 horas
+
+Estandarizad y luego calculad la probabilidad requerida mediante las tablas y comprobad vuestro resultado en R (o Python).
+
+<br>
+
+#### a) Menos de 6 horas
+
+<br>
+
+$$P(\mathcal{X} \lt 6) = P(\mathcal{Z} \lt -2) = 1 - P(\mathcal{Z} \ge -2) = 1 - P(\mathcal{Z} \le 2)$$
+
+<br>
+
+Calculamos $P(\mathcal{Z} \le 2)$
+
+<br>
+
+#### Usando las tablas
+
+```{r}
+p = 0.9772
+```
+
+La probabilidad de que el producto se termine en menos de 6 horas es de **`r 1 - p`**
+
+<br>
+
+#### En `R`
+
+```{r}
+mu = 10
+sig = 2
+
+1 - pnorm(2)
+
+# Otra forma
+1 - pnorm(14, mean = mu, sd = sig)
+```
+
+<br>
+
+#### En `Python`
+
+```{python}
+from scipy.stats import norm
+
+mu = 10
+sig = 2
+
+1 - norm.cdf(2)
+
+# Otra forma
+1 - norm.cdf(14, loc = mu, scale = sig)
+```
+
+<br>
+
+#### b) Entre 7 y 13 horas
+
+<br>
+
+$$P(7 \le \mathcal{X} \le 13) = P(-1.5 \le \mathcal{Z} \le 1.5) = P(\mathcal{Z} \le 1.5) - P(\mathcal{Z} \le -1.5)$$
+
+<br>
+
+Calculamos $P(\mathcal{Z} \le 1.5)$ y $P(\mathcal{Z} \le -1.5)$
+
+<br>
+
+#### Usando las tablas
+
+```{r}
+p1 = 0.9332
+p2 = 0.0559
+```
+
+La probabilidad de que el producto se termine entre 7 y 13 horas es **`r p1 - p2`**
+
+<br>
+
+#### En `R`
+
+```{r}
+mu = 10
+sig = 2
+
+p1 = pnorm(1.5)
+p2 = pnorm(-1.5)
+
+p1 - p2
+
+# Otra forma
+p3 = pnorm(13, mean = mu, sd = sig)
+p4 = pnorm(7, mean = mu, sd = sig)
+
+p3 - p4
+```
+
+<br>
+
+#### En `Python`
+
+```{python}
+from scipy.stats import norm
+
+mu = 10
+sig = 2
+
+p1 = norm.cdf(1.5)
+p2 = norm.cdf(-1.5)
+
+p1 - p2
+
+# Otra forma
+p3 = norm.cdf(13, loc = mu, scale = sig)
+p4 = norm.cdf(7, loc = mu, scale = sig)
+
+p3 - p4
+```
+
+### Punto 2
+
+El valor (en millones) de las ventas anuales realizadas en la Discográfica "Hasta quedarnos sin tímpanos" sigue un modelo normal de media igual a 200 y desviación típica igual a 40.
+
+a) Calcula la probabilidad de que el número de ventas sea exactamente igual a 200 (millones)
+
+b) Calcula la probabilidad de que el número de ventas sea mayor que 250 (millones)
+
+c) Calcula la probabilidad de que el número de ventas sea menor o igual que 100 (millones)
+
+Estandarizad y luego calculad la probabilidad requerida mediante las tablas y comprobad vuestro resultado en R (o Python)
+
+<br>
+
+#### a) Calcula la probabilidad de que el número de ventas sea exactamente igual a 200 (millones)
+
+<br>
+
+Al tratarse de una variable aleatoria continua, ya que sigue una distribución normal, la probabilidad de que dicha variable tome un valor exacto es **0** para todo el conjunto de los números reales.
+
+$$P(X = x) = 0 \ \forall x \in \mathbb{R}$$
+
+<br>
+
+#### b) Calcula la probabilidad de que el número de ventas sea mayor que 250 (millones)
+
+<br>
+
+$$P(\mathcal{X} \gt 250) = P(\mathcal{Z} \gt 1.25) = 1 - P(\mathcal{Z} \le 1.25)$$
+
+<br>
+
+Calculamos $P(\mathcal{Z} \le 1.25)$
+
+<br>
+
+#### Usando las tablas
+
+```{r}
+p = 0.8944
+```
+
+La probabilidad de que el número de ventas sea mayor que 250 (millones) es **`r 1 - p`**
+
+<br>
+
+#### En `R`
+
+```{r}
+mu = 200
+sig = 40
+
+1 - pnorm(1.25)
+
+# Otra forma
+1 - pnorm(250, mean = mu, sd = sig)
+```
+
+<br>
+
+#### En `Python`
+
+```{python}
+from scipy.stats import norm
+
+mu = 200
+sig = 40
+
+1 - norm.cdf(1.25)
+
+# Otra forma
+1 - norm.cdf(250, loc = mu, scale = sig)
+```
+
+<br>
+
+#### c) Calcula la probabilidad de que el número de ventas sea menor o igual que 100 (millones)
+
+<br>
+
+$$P(\mathcal{X} \le 100) = P(\mathcal{Z} \le -2.5)$$
+
+<br>
+
+Calculamos $P(\mathcal{Z} \le -2.5)$
+
+<br>
+
+#### Usando las tablas
+
+```{r}
+p = 0.0062
+```
+
+La probabilidad de que el número de ventas sea menor o igual que 100 (millones) es **`r p`**
+
+<br>
+
+#### En `R`
+
+```{r}
+mu = 200
+sig = 40
+
+pnorm(-2.5)
+
+# Otra forma
+pnorm(100, mean = mu, sd = sig)
+```
+
+<br>
+
+#### En `Python`
+
+```{python}
+from scipy.stats import norm
+
+mu = 200
+sig = 40
+
+norm.cdf(-2.5)
+
+# Otra forma
+norm.cdf(100, loc = mu, scale = sig)
+```
+
+<br>
+
+### Punto 3
+
+Las puntuaciones obtenidas en un examen tipo test realizado a un grupo de opositores se distribuyen normalmente con media 50 y desviación típica 6.5. Calculad
+
+a) Probabilidad de tener una puntuación menor a 23 puntos.
+
+b) Probabilidad de tener entre 27.3 y 43.1 puntos
+
+c) Probabilidad de tener más de 62 puntos
+
+d) Probabilidad de tener 3.2 puntos o menos
+
+e) Hallad el número de puntos que se deben obtener para que la probabilidad de sacar menos de esa cantidad de puntos sea de 0.045
+
+f) Repetid el apartado anterior, pero esta vez para obtener una probabilidad de 0.45
+
+Estandarizad y luego calculad la probabilidad requerida mediante las tablas y comprobad vuestro resultado en R (o Python)
+
+<br>
+
+#### a) Probabilidad de tener una puntuación menor a 23 puntos
+
+<br>
+
+$$P(\mathcal{X} \lt 23) = P(\mathcal{Z} \lt -4.15) = 1 - P(\mathcal{Z} \ge -4.15) = 1 - P(\mathcal{Z} \le 4.15)$$
+
+<br>
+
+Calculamos $P(\mathcal{Z} \le 4.15)$
+
+<br>
+
+#### Usando las tablas
+
+```{r}
+p = 1
+```
+
+La probabilidad de tener una puntuación menor a 23 puntos es **`r 1 - p`**
+
+<br>
+
+#### En `R`
+
+```{r}
+mu = 50
+sig = 6.5
+
+1 - pnorm(-1 * (23 - mu) / sig)
+
+# Otra forma
+1 - pnorm(77, mean = mu, sd = sig)
+```
+
+<br>
+
+#### En `Python`
+
+```{python}
+from scipy.stats import norm
+
+mu = 50
+sig = 6.5
+
+1 - norm.cdf(-1 * (23 - mu) / sig)
+
+# Otra forma
+1 - norm.cdf(mu + (mu - 23), loc = mu, scale = sig)
+```
+
+<br>
+
+#### b) Probabilidad de tener entre 27.3 y 43.1 puntos
+
+<br>
+
+$$P(27.3 \le \mathcal{X} \le 43.1) = P(-3.49 \le \mathcal{Z} \le -1.06) = P(\mathcal{Z} \le -1.06) - P(\mathcal{Z} \le -3.49)$$
+
+<br>
+
+Calculamos $P(\mathcal{Z} \le -1.06)$ y $P(\mathcal{Z} \le -3.49)$
+
+<br>
+
+#### Usando las tablas
+
+```{r}
+p1 = 0.1446
+p2 = 0.0002
+```
+
+La probabilidad de tener entre 27.3 y 43.1 puntos es **`r p1 - p2`**
+
+<br>
+
+#### En `R`
+
+```{r}
+mu = 50
+sig = 6.5
+
+p1 = pnorm((43.1 - mu) / sig)
+p2 = pnorm((27.3 - mu) / sig)
+
+p1 - p2
+
+# Otra forma
+p3 = pnorm(43.1, mean = mu, sd = sig)
+p4 = pnorm(27.3, mean = mu, sd = sig)
+
+p3 - p4
+```
+
+<br>
+
+#### En `Python`
+
+```{python}
+from scipy.stats import norm
+
+mu = 50
+sig = 6.5
+
+p1 = norm.cdf((43.1 - mu) / sig)
+p2 = norm.cdf((27.3 - mu) / sig)
+
+p1 - p2
+
+# Otra forma
+p3 = norm.cdf(43.1, loc = mu, scale = sig)
+p4 = norm.cdf(27.3, loc = mu, scale = sig)
+
+p3 - p4
+```
+
+<br>
+
+#### c) Probabilidad de tener más de 62 puntos
+
+<br>
+
+$$P(\mathcal{X} \gt 62) = P(\mathcal{Z} \gt 1.85) = 1 - P(\mathcal{Z} \le 1.85)$$
+
+<br>
+
+Calculamos $P(\mathcal{Z} \le 1.85)$
+
+<br>
+
+#### Usando las tablas
+
+```{r}
+p = 0.9678
+```
+
+La probabilidad de tener más de 62 puntos es **`r 1 - p`**
+
+<br>
+
+#### En `R`
+
+```{r}
+mu = 50
+sig = 6.5
+
+1 - pnorm((62 - mu) / sig)
+
+# Otra forma
+1 - pnorm(62, mean = mu, sd = sig)
+```
+
+<br>
+
+#### En `Python`
+
+```{python}
+from scipy.stats import norm
+
+mu = 50
+sig = 6.5
+
+1 - norm.cdf((62 - mu) / sig)
+
+# Otra forma
+1 - norm.cdf(62, loc = mu, scale = sig)
+```
+
+<br>
+
+#### d) Probabilidad de tener 3.2 puntos o menos
+
+<br>
+
+Esta probabilidad teniendo en cuenta los parámetros de la distribución tiene que ser nula o casi nula.
+
+<br>
+
+$$P(\mathcal{X} \le 3.2) = P(\mathcal{Z} \le -7,2)$$
+
+<br>
+
+Calculamos $P(\mathcal{Z} \le -7,2)$
+
+<br>
+
+#### Usando las tablas
+
+```{r}
+p = 0
+```
+
+La probabilidad de tener 3.2 puntos o menos es **`r p`**
+
+<br>
+
+#### En `R`
+
+```{r}
+mu = 50
+sig = 6.5
+
+pnorm((3.2 - mu) / sig)
+
+# Otra forma
+pnorm(3.2, mean = mu, sd = sig)
+```
+
+<br>
+
+#### En `Python`
+
+```{python}
+from scipy.stats import norm
+
+mu = 50
+sig = 6.5
+
+norm.cdf((3.2 - mu) / sig)
+
+# Otra forma
+norm.cdf(3.2, loc = mu, scale = sig)
+```
+
+<br>
+
+#### e) Hallad el número de puntos que se deben obtener para que la probabilidad de sacar menos de esa cantidad de puntos sea de 0.045
+
+<br>
+
+$$P(\mathcal{X} \lt \alpha) = P\left(\mathcal{Z} \lt \frac{\alpha - 50}{6.5}\right) = 1 - P\left(\mathcal{Z} \ge \frac{\alpha - 50}{6.5}\right) = 1 - P\left(\mathcal{Z} \le - \frac{\alpha - 50}{6.5}\right) = 0.045$$
+
+<br>
+
+Despejando nos queda
+
+<br>
+
+$$P\left(\mathcal{Z} \le - \frac{\alpha - 50}{6.5}\right) = 0.955$$
+
+<br>
+
+Debemos hallar $\alpha$ que vendría a estar dado por $x = - \frac{\alpha - 50}{6.5}$ donde $x$ es el valor correspondiente para la probabilidad de valor **0.955** de la normal estandarizada ($N(0,1)$).
+
+<br>
+
+#### Usando las tablas
+
+```{r}
+x = 1.70
+a = ((x * 6.5) / -1) + 50 
+```
+
+El número de puntos es **`r round(a, 1)`**
+
+<br>
+
+#### En `R`
+
+```{r}
+mu = 50
+sig = 6.5
+
+x = qnorm(0.955)
+a1 = ((x * 6.5) / -1) + 50
+a1
+
+# Otra forma
+a2 = qnorm(0.045, mean = mu, sd = sig)
+a2
+```
+
+<br>
+
+Verificamos que los valores obtenidos sean correctos
+
+```{r}
+pnorm(a1, mean = mu, sd = sig)
+pnorm((a2 - mu) / sig)
+```
+
+<br>
+
+#### En `Python`
+
+```{python}
+from scipy.stats import norm
+
+mu = 50
+sig = 6.5
+
+x = norm.ppf(0.955)
+a1 = ((x * 6.5) / -1) + 50
+a1
+
+# Otra forma
+a2 = norm.ppf(0.045, loc = mu, scale = sig)
+a2
+```
+
+<br>
+
+Verificamos que los valores obtenidos sean correctos
+
+```{python}
+norm.cdf(a1, loc = mu, scale = sig)
+norm.cdf((a2 - mu) / sig)
+```
+
+<br>
+
+#### f) Repetid el apartado anterior, pero esta vez para obtener una probabilidad de 0.45
+
+<br>
+
+$$P(\mathcal{X} \lt \alpha) = P\left(\mathcal{Z} \lt \frac{\alpha - 50}{6.5}\right) = 1 - P\left(\mathcal{Z} \ge \frac{\alpha - 50}{6.5}\right) = 1 - P\left(\mathcal{Z} \le - \frac{\alpha - 50}{6.5}\right) = 0.45$$
+
+<br>
+
+Despejando nos queda
+
+<br>
+
+$$P\left(\mathcal{Z} \le - \frac{\alpha - 50}{6.5}\right) = 0.55$$
+
+<br>
+
+Debemos hallar $\alpha$ que vendría a estar dado por $x = - \frac{\alpha - 50}{6.5}$ donde $x$ es el valor correspondiente para la probabilidad de valor **0.55** de la normal estandarizada ($N(0,1)$).
+
+<br>
+
+#### Usando las tablas
+
+```{r}
+x = 0.13
+a = ((x * 6.5) / -1) + 50 
+```
+
+El número de puntos es **`r round(a, 1)`**
+
+<br>
+
+#### En `R`
+
+```{r}
+mu = 50
+sig = 6.5
+
+x = qnorm(0.55)
+a1 = ((x * 6.5) / -1) + 50
+a1
+
+# Otra forma
+a2 = qnorm(0.45, mean = mu, sd = sig)
+a2
+```
+
+<br>
+
+Verificamos que los valores obtenidos sean correctos
+
+```{r}
+pnorm(a1, mean = mu, sd = sig)
+pnorm((a2 - mu) / sig)
+```
+
+<br>
+
+#### En `Python`
+
+```{python}
+from scipy.stats import norm
+
+mu = 50
+sig = 6.5
+
+x = norm.ppf(0.55)
+a1 = ((x * 6.5) / -1) + 50
+a1
+
+# Otra forma
+a2 = norm.ppf(0.45, loc = mu, scale = sig)
+a2
+```
+
+<br>
+
+Verificamos que los valores obtenidos sean correctos
+
+```{python}
+norm.cdf(a1, loc = mu, scale = sig)
+norm.cdf((a2 - mu) / sig)
+```

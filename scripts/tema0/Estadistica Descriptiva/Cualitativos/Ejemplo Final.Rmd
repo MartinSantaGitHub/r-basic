@@ -1,0 +1,104 @@
+---
+title: "Ejemplo Final"
+author: "Martin Santamaria"
+date: "12/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Ejemplo Final
+
+## Juntar color de ojos y pelo sin distinguir por sexo
+
+```{r}
+ftable(HairEyeColor)
+male <- HairEyeColor[,,"Male"]
+female <- HairEyeColor[,,"Female"]
+data <- as.table(male+female)
+data
+```
+
+## Manipulación de datos
+
+```{r}
+dimnames(data)
+dimnames(data) = list(
+  Pelo = c("Negro", "Marron", "Pelirrojo", "Rubio"),
+  Ojos = c("Marrones", "Azules", "Pardos", "Verdes") 
+)
+data
+```
+
+## Diagrama de mosaico
+
+```{r}
+plot(data, main = "Diagrama de mosaico de la tabla bidimensional de frecuencias\n de colores de cabellos y ojos", 
+     col = c("lightblue"))
+```
+
+## Datos numéricos
+
+```{r}
+sum(data)
+```
+
+```{r}
+data
+# fa_ojos <- apply(data, FUN = sum, MARGIN = 2)
+# fa_ojos
+# fa_pelo <- apply(data, FUN = sum, MARGIN = 1)
+# fa_pelo
+fa_ojos <- colSums(data)
+fa_ojos
+fa_pelo <- rowSums(data)
+fa_pelo
+fr_ojos <- round(prop.table(fa_ojos), 3)
+fr_ojos
+fr_pelo <- round(prop.table(fa_pelo), 3)
+fr_pelo
+```
+
+## Gráficos de barras
+
+```{r}
+#par(mfrow = c(1,2))
+barplot(fr_ojos, 
+        legend.text = c("Marrones", "Azules", "Pardos", "Verdes"), 
+        col = c("brown ", "lightblue", "chocolate", "green"), 
+        main = "Frecuencias relativas\n de colores de ojos ", 
+        ylim = c(0, 0.4))
+barplot(fr_pelo,
+        names.arg = c("Negro", "Marron", "Pelirrojo", "Rubio"),
+        col = c("black", "brown", "red", "darkgoldenrod1"), 
+        main = "Frecuencias relativas\n de colores de cabello",
+        ylim = c(0, 0.5))
+```
+
+## Frecuencias Relativas Globales y Marginales
+
+```{r}
+data
+round(prop.table(data), 3)
+fr_p <- round(prop.table(data, margin = 1), 3)
+fr_o <- round(prop.table(data, margin = 2), 3)
+```
+
+## Diagramas de las frecuencias calculadas anteriormente
+
+```{r}
+barplot(fr_p, 
+        beside = TRUE,
+        legend.text = TRUE, 
+        col = c("black", "brown", "red", "darkgoldenrod1"), 
+        main = "Frecuencias relativas de colores de\n cabello en cada color de ojos", 
+        ylim = c(0, 0.8))
+barplot(t(fr_o),
+        beside = TRUE,
+        legend.text = TRUE,
+        col = c("brown ", "lightblue", "chocolate", "green"),
+        main = "Frecuencias relativas de colores\n de ojo en cada color de cabellos",
+        ylim = c(0, 0.6))
+```

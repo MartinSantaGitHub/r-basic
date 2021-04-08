@@ -1,0 +1,154 @@
+---
+title: "Vuelos de NYC"
+author: "Martin Santamaria"
+date: "28/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+Sys.setenv(RETICULATE_PYTHON = "/Python38")
+library(reticulate)
+```
+
+## Vuelos de NYC
+
+```{r}
+data <- nycflights13::flights
+
+head(data)
+nrow(data)
+summary(data)
+```
+
+```{python}
+pydata = r.data
+pydata = pydata[pydata["dest"] == "ORD"]
+pydata = pydata[["carrier", "dep_delay", "arr_delay", "origin"]]
+pydata = pydata[pydata["arr_delay"] < 6 * 60]
+pydata = pydata.dropna()
+
+pydata.head()
+pydata.shape
+```
+
+```{r}
+summary(py$pydata)
+boxplot(arr_delay~origin, data = py$pydata, main = "Retraso de los vuelos hacia Orlando desde NYC")
+```
+
+## Retraso de salida de vuelos de aerolíneas por aeropuerto
+
+```{python}
+import numpy as np
+
+dep_delay_df = r.data
+dep_delay_df = dep_delay_df.pivot_table(["dep_delay"], index = ["carrier"], columns = ["origin"], aggfunc = np.mean) 
+dep_delay_df = dep_delay_df.dropna()
+dep_delay_df
+```
+
+```{r}
+barplot(as.matrix(py$dep_delay_df),
+        main = "Retraso de salida de vuelos de aerolíneas por aeropuerto",
+        names.arg = c('EWR', 'JFK', 'LGA'),
+        xlab = "Aeropuerto",
+        ylab = "Retraso en minutos",
+        col = c('purple2','palegreen3','orchid3','orangered2','lightsteelblue2','lightsalmon2', 'khaki1', 'aquamarine2'),
+        beside = TRUE,
+        legend.text = TRUE,
+        args.legend = list(title = "Aerolínea", x = "top", horiz = TRUE), 
+        ylim = c(0, 30))
+```
+
+Del gráfico podemos observar que la aerolínea **9E** parecería tener problemas para salir a horario en el aeropuerto **JFK** en comparación con los otros dos aeropuertos, mientras que el promedio elevado de retrasos de salida de la aerolínea **EV** se ve que no depende de los aeropuertos del que parten sus aviones. Lo mismo ocurre con la aerolínea **US** que es la que tiene una tasa menor del promedio de retrasos de salida de sus vuelos, independientemente del aeropuerto en cuestión.
+
+## Retraso de salida de vuelos por aeropuerto
+
+```{r}
+boxplot(py$dep_delay_df, 
+        main = "Retraso de salida de vuelos por aeropuerto",
+        names = c('EWR', 'JFK', 'LGA'),
+        xlab = "Aeropuerto",
+        ylab = "Retraso en minutos",
+        col = c("darkolivegreen", "dodgerblue3", "firebrick1"))
+means = apply(py$dep_delay_df, 2, mean)
+points(means, col = c("pink"), pch = 15)
+abline(h = 10, col = c("yellow"))
+```
+
+Observando el boxplot, vemos que el aeropuerto **EWR** presenta los mayores retrasos en la partida de sus vuelos por tener más de la mitad del promedio de retrasos igual o superior a los **12 minutos**.
+
+## Distancia de recorrido por aerolíneas
+
+```{python}
+distance_df = r.data
+distance_df = distance_df.pivot_table(["distance"], index = ["carrier"], aggfunc = np.mean) 
+distance_df = distance_df.dropna()
+distance_df
+```
+
+```{r}
+barplot(as.matrix(py$distance_df),
+        main = "Distancia de recorrido por aerolínea",
+        names.arg = "",
+        xlab = "",
+        ylab = "Distancia",
+        col = c('purple2','palegreen3','moccasin','orchid3','orangered2','lightsteelblue2','snow2','tan3',
+                'thistle4','lightsalmon2','yellow2','khaki1','aquamarine2','magenta','navyblue','mediumvioletred'),
+        beside = TRUE,
+        legend.text = TRUE,
+        args.legend = list(title = "Aerolínea", x = "topright", ncol = 3), 
+        ylim = c(0,6000))
+```
+
+Del gráfico podemos observar que la aerolínea **HA** es la que mayor distancia ha recorrido.
+
+## Destinos por aeropuerto
+
+```{python}
+dest_df = r.data
+dest_df = dest_df.groupby("origin").apply(lambda x: x.nunique())[["dest"]]
+dest_df
+```
+
+```{r}
+barplot(as.matrix(py$dest_df),
+        main = "Destinos por aeropuerto",
+        names.arg = c("EWR","JFK","LGA"),
+        xlab = "Aeropuerto",
+        ylab = "Cantidad de Destinos",
+        col = c('snow2','lightsalmon2','thistle4'),
+        beside = TRUE,
+        ylim = c(0,100),
+        space = 0.2)
+```
+
+Podemos observar que el aeropuerto **EWR** es el que más destinos ofrece en comparación con los otros dos aeropuertos. 
+Comparando ademas con el boxplot obtenido anteriormente, se puede ver que hay una relación de cuanto más destinos ofrece el aeropuerto, más demora presenta en promedio en la partida de sus vuelos, quizás debido a problemas en la organización de la cantidad de vuelos a los diversos destinos que ofrece un aeropuerto.
+
+Podemos verificar esta hipótesis analizando la cantidad de vuelos por aeropuerto.
+
+## Vuelos por aeropuerto
+
+```{python}
+flights_df = r.data
+flights_df = flights_df[["origin", "flight"]]
+flights_df = flights_df.pivot_table(["flight"], index = ["origin"], aggfunc = len)
+flights_df = flights_df.dropna()
+flights_df
+```
+
+```{r}
+barplot(as.matrix(py$flights_df),
+        main = "Vuelos por aeropuerto",
+        names.arg = c("EWR","JFK","LGA"),
+        xlab = "Aeropuerto",
+        ylab = "Cantidad de Vuelos",
+        col = c('navyblue','khaki1','tan3'),
+        beside = TRUE,
+        ylim = c(0,140000),
+        space = 0.2)
+```
+
+Efectivamente, podemos observar que el aeropuerto que realiza más vuelos es el **EWR**, el mismo aeropuerto que más destinos ofrece. Por tanto, a mayor cantidad de vuelos, mayor la demora en la partida de los vuelos.

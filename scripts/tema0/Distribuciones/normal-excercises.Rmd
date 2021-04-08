@@ -1,0 +1,68 @@
+---
+title: "Ejercicios de una Distribución Normal"
+author: "Martin Santamaria"
+date: "24/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Cálculo de algunas probabilidades
+
+$$P\left(\mathcal{Z} \le \frac{\mathcal{X} - \mu}{\sigma}\right)$$
+
+## En `R`
+
+```{r}
+mu = 75
+sig = 4
+
+pnorm(80, mean = mu, sd = sig)
+pnorm(65, mean = mu, sd = sig)
+pnorm(1.25)
+pnorm(-2.5)
+
+1 - pnorm(90, mean = mu, sd = sig)
+1 - pnorm(3.75)
+
+# pnorm(69, mean = mu, sd = sig)
+# pnorm(-1.5)
+
+1 - pnorm(mu + (mu - 70), mean = mu, sd = sig)
+1 - pnorm(1.25)
+
+pnorm(mu + (mu - 69), mean = mu, sd = sig)
+pnorm(1.5)
+```
+
+## En `Python`
+
+```{r}
+Sys.setenv(RETICULATE_PYTHON = "/Python38")
+```
+
+```{python}
+from scipy.stats import norm
+
+mu = 75
+sig = 4
+
+norm.cdf(80, loc = mu, scale = sig)
+norm.cdf(65, loc = mu, scale = sig)
+norm.cdf(1.25)
+norm.cdf(-2.5)
+
+1 - norm.cdf(90, loc = mu, scale = sig)
+1 - norm.cdf(3.75)
+
+# norm.cdf(69, loc = mu, scale = sig)
+# norm.cdf(-1.5)
+
+1 - norm.cdf(mu + (mu - 70), loc = mu, scale = sig)
+1 - norm.cdf(1.25)
+
+norm.cdf(mu + (mu - 69), loc = mu, scale = sig)
+norm.cdf(1.5)
+```

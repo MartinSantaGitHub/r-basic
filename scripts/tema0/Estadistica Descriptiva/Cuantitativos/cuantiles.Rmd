@@ -1,0 +1,44 @@
+---
+title: "Cuantiles"
+author: "Martin Santamaria"
+date: "25/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Cuantiles
+
+```{r}
+set.seed(260798)
+dado = sample(1:4, size = 50, replace = TRUE)
+set.seed(NULL)
+length(dado)
+
+dado = sort(dado)
+dado
+```
+
+```{r}
+dado.df = data.frame(Puntuacion = 1:4,
+                      Fr.abs = as.vector(table(dado)),
+                      Fr.rel = as.vector(round(prop.table(table(dado)), 2)),
+                      Fr.acu = as.vector(cumsum(table(dado))),
+                      Fr.racu = as.vector(round(cumsum(prop.table(table(dado))), 2)))
+dado.df
+
+50*0.3
+dado[15]
+```
+
+```{r}
+set.seed(0)
+dado2 = sample(1:6, size = 15, replace = TRUE)
+sort(dado2)
+set.seed(NULL)
+quantile(dado2, 0.25) # Primer cuartil
+quantile(dado2, 0.8)
+```
+

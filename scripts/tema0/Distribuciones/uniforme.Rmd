@@ -1,0 +1,77 @@
+---
+title: "Distribución Uniforme"
+author: "Martin Santamaria"
+date: "23/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Distribución Uniforme
+
+Supongamos que $X\sim U([0,1])$ entonces podemos estudiar sus parámetros. 
+
+## En `R`
+
+```{r}
+a = 0
+b = 4
+x = seq(-0.1, 4.1, 0.1)
+  
+hist(runif(1000000, a, b), freq = FALSE)
+lines(x, dunif(x, min = a, max = b), type = 'l', col = 'red', lwd = 1.5)
+
+plot(punif(x, min = a, max = b), type = 'l', xaxt = 'n')
+axis(1, at = 0:42, labels = x)
+
+qunif(0.25, a, b)
+qunif(0.50, a, b)
+qunif(0.75, a, b)
+```
+
+## En `Python`
+
+```{r}
+Sys.setenv(RETICULATE_PYTHON = "/Python38")
+```
+
+```{python}
+from scipy.stats import uniform
+import matplotlib.pyplot as plt
+import numpy as np
+
+a = 0
+b = 4
+loc = a
+scale = b - a
+
+fig, ax = plt.subplots(1,1)
+
+rv = uniform(loc = loc, scale = scale)
+x = np.linspace(-0.1, 4.1)
+r = rv.rvs(size = 100000)
+
+mean, var, skew, kurt = rv.stats(moments = 'mvsk')
+
+print(f"Media {mean}")
+print(f"Varianza {var}")
+print(f"Sesgo {skew}")
+print(f"Curtosis {kurt}")
+
+ax.plot(x, rv.pdf(x), 'k-', lw = 2, label = "Función de Densidad de U(0,4)")
+ax.hist(r, density = True, histtype = "stepfilled", alpha = 0.25)
+ax.legend(loc = 'best', frameon = False)
+
+plt.show()
+```
+
+```{python}
+fig, ax = plt.subplots(1,1)
+
+ax.plot(x, rv.cdf(x), lw = 2, label = "Función de Distribución Acumulada de U(0,4)")
+ax.legend(loc = 'best', frameon = False)
+
+plt.show()
+```

@@ -1,0 +1,109 @@
+---
+title: "Dispersion"
+author: "Martin Santamaria"
+date: "25/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Dispersión
+
+```{r}
+dados = c(6,2,3,4,6,2,6,6,4,4,1,2,2,5,3)
+n = length(dados)
+```
+
+```{r}
+range(dados)
+diff(range(dados))
+IQR(dados)
+var(dados) # Varianza muestral
+sd(dados) # Desviación típica muestral
+var(dados) * (n - 1)/n 
+sd(dados) * sqrt((n - 1)/n)
+```
+
+```{r}
+cangrejos = read.table("../../../../../Data/datacrab.txt", header = TRUE)
+cangrejos = cangrejos[-1]
+summary(cangrejos)
+```
+
+```{r}
+summary(subset(cangrejos, color == 3, c("weight", "width")))
+summary(subset(cangrejos, color == 5, c("weight", "width")))
+```
+
+```{r}
+by(iris[c(1,3)], iris$Species, FUN = summary)
+aggregate(cbind(Sepal.Length, Petal.Length)~Species, data = iris, FUN = summary)
+```
+
+```{r}
+x = c(1,2,3,NA)
+sum(x)
+sum(x, na.rm = TRUE)
+mean(x)
+mean(x, na.rm = TRUE)
+var(x)
+var(x, na.rm = TRUE)
+sd(x)
+sd(x, na.rm = TRUE)
+```
+
+```{r}
+set.seed(0)
+dado2 = sample(1:6, size = 15, replace = TRUE)
+sort(dado2)
+set.seed(NULL)
+boxplot(dado2, col = c("green"), main = "Un diagrama de caja")
+d = boxplot(dado2, sample(1:6, 20, TRUE), main = "Dos diagramas de caja")
+str(d)
+d
+```
+
+```{r}
+body = read.table("../../../../../Data/bodyfat.txt", header = TRUE)
+boxplot(body)
+head(iris)
+boxplot(iris[1:4], col = "lightblue")
+```
+
+```{r}
+boxplot(body[7:9], names = c("Pecho", "Abdomen", "Cadera"))
+head(Orange)
+str(Orange)
+trees = boxplot(circumference~Tree, data = Orange, ylab = "Circunferencia del tronco (mm)",
+                main = "Boxplot de los naranjos en función del tipo de árbol")
+str(trees)
+trees
+boxplot(iris$Sepal.Length~iris$Species)
+boxplot(Sepal.Length~Species, data = iris)
+```
+
+```{r}
+crab = read.table("../../../../../Data/datacrab.txt", header = TRUE)
+boxplot(weight~color, data = crab)
+str(iris)
+boxplot(Sepal.Width~Species, data = iris, ylab = "Anchura del sétalo (cm)",
+        notch = TRUE,
+        col = c("cyan", "cyan2", "cyan4"),
+        main = "Boxplot de iris")
+c = boxplot(weight~color, data = crab,
+            notch = TRUE)
+medias_crab = aggregate(weight~color, data = crab, FUN = mean)
+medias_crab
+points(medias_crab, col = c("blue"), pch = 21)
+str(c)
+c
+```
+
+```{r}
+boxplot(Sepal.Width~Species, data = iris, y = "Anchura del sétalo (cm)")
+medias = aggregate(Sepal.Width~Species, data = iris, FUN = mean)
+medias
+points(medias, col = c("pink"), pch = 15)
+```

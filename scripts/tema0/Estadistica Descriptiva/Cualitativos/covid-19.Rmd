@@ -1,0 +1,157 @@
+---
+title: "Covid-19"
+author: "Martin Santamaria"
+date: "11/3/2020"
+output:
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### **Global** 
+
+```{r include=FALSE}
+#covid_19 = readxl::read_xls("../../../../../Data/COVID-19.xls")
+covid_19 = read.csv("../../../../../Data/covid_19.csv", header = TRUE)
+head(covid_19, 5)
+str(covid_19)
+```
+
+```{r include=FALSE}
+total_deaths = sum(covid_19$Deaths)
+total_recovered = sum(covid_19$Recovered)
+
+total_deaths
+total_recovered
+
+df = aggregate(cbind(Confirmed, Deaths, Recovered) ~ Country_Region, data = covid_19, FUN = sum, na.rm = TRUE)
+```
+
+```{r echo=FALSE}
+data = df[df$Recovered > 0 | df$Deaths > 0,]
+
+total_confirmed = sum(data$Confirmed)
+
+data$Fr.Deaths = round(data$Deaths / data$Confirmed, 4)
+data$Fr.Recovered = round(data$Recovered / data$Confirmed, 4)
+data$Frg.Confirmed = round(data$Confirmed / total_confirmed, 4)
+data$Frg.Deaths = round(data$Deaths / total_deaths, 4)
+data$Frg.Recovered = round(data$Recovered / total_recovered, 4)
+
+data
+
+fr.deaths = total_deaths / total_confirmed
+fr.recovered = total_recovered / total_confirmed
+```
+
+```{r}
+fr.deaths
+fr.recovered
+```
+
+```{r include=FALSE}
+df_europe = data[data$Country_Region %in% c('MS Zaandam','Liechtenstein','Belarus','West Bank and Gaza','Kosovo','Cyprus','Montenegro','Monaco','Turkey','Slovakia','Serbia','Moldova','Lithuania','Georgia','Estonia','Czechia','Bosnia and Herzegovina','Ukraine','Slovenia','Poland','Portugal','North Macedonia','Malta','Luxembourg','Hungary','Croatia','Algeria','Andorra','Ireland','Bulgaria','Albania','Sweden','Latvia','Iceland','Norway','Belarus','Austria','Israel','Finland','Denmark','Belgium','Russia','France','Germany','Italy','Netherlands','Romania','San Marino','Spain','Switzerland','United Kingdom','Greece','Holy See'),]
+
+df_asia = data[data$Country_Region %in% c('Uzbekistan','Timor-Leste','Syria','Rwanda','Mongolia','Kyrgyzstan','Diamond Princess','Burma','Bhutan','Saudi Arabia','United Arab Emirates','Oman','Nepal','Lebanon','Iraq','Iran','India','Cambodia','Bahrain','Kuwait','Pakistan','Azerbaijan','Jordan','Qatar','Afghanistan','Bangladesh','Maldives','Kazakhstan','Brunei','Armenia','Taiwan*','Indonesia','Sri Lanka','Japan','China','Malaysia','Philippines','Singapore','Korea, South','Thailand','Vietnam'),]
+
+df_africa = data[data$Country_Region %in% c('Zambia','Uganda','Tanzania','Somalia','Mozambique','Mauritius','Mauritania','Mali','Malawi','Madagascar','Libya','Liberia','Ethiopia','Eswatini','Equatorial Guinea','Djibouti','Chad','Botswana','Benin','Angola','South Africa','Niger','Kenya','Zimbabwe','Namibia','Gambia','Cameroon','Cabo Verde','Ghana','Congo (Kinshasa)','Congo (Brazzaville)','Togo','Gabon','Tunisia','Nigeria','Cote d\'Ivoire','Burkina Faso','Sudan','Morocco','Egypt','Senegal'),]
+
+df_oceania = data[data$Country_Region %in% c('New Zealand','Australia'),]
+
+df_north_america = data[data$Country_Region %in% c('US','Canada'),]
+
+df_south_america = data[data$Country_Region %in% c('Uruguay','Suriname','Saint Vincent and the Grenadines','Saint Lucia','Honduras','Haiti','El Salvador','Dominica','Bolivia','Belize','Barbados','Bahamas','Antigua and Barbuda','Venezuela','Paraguay','Trinidad and Tobago','Chile','Brazil','Peru','Martinique','Jamaica','Guatemala','Dominican Republic','Cuba','Mexico','Argentina','Panama','Ecuador','Guyana','Colombia','Costa Rica','Nicaragua'),]
+```
+
+```{r include=FALSE}
+t_europe = apply(df_europe[,-1], FUN = sum, MARGIN = 2)
+t_europe$Region = 'Europe'
+t_europe = as.data.frame(t_europe)
+t_europe$Fr.Deaths = round(t_europe$Deaths / t_europe$Confirmed, 4)
+t_europe$Fr.Recovered = round(t_europe$Recovered / t_europe$Confirmed, 4)
+t_europe = t_europe[,c('Region','Confirmed','Deaths','Recovered', 'Fr.Deaths', 'Fr.Recovered', 'Frg.Confirmed', 'Frg.Deaths', 'Frg.Recovered')]
+t_europe
+
+t_asia = apply(df_asia[,-1], FUN = sum, MARGIN = 2)
+t_asia$Region = 'Asia'
+t_asia = as.data.frame(t_asia)
+t_asia$Fr.Deaths = round(t_asia$Deaths / t_asia$Confirmed, 4)
+t_asia$Fr.Recovered = round(t_asia$Recovered / t_asia$Confirmed, 4)
+t_asia = t_asia[,c('Region','Confirmed','Deaths','Recovered', 'Fr.Deaths', 'Fr.Recovered', 'Frg.Confirmed', 'Frg.Deaths', 'Frg.Recovered')]
+t_asia
+
+t_africa = apply(df_africa[,-1], FUN = sum, MARGIN = 2)
+t_africa$Region = 'Africa'
+t_africa = as.data.frame(t_africa)
+t_africa$Fr.Deaths = round(t_africa$Deaths / t_africa$Confirmed, 4)
+t_africa$Fr.Recovered = round(t_africa$Recovered / t_africa$Confirmed, 4)
+t_africa = t_africa[,c('Region','Confirmed','Deaths','Recovered', 'Fr.Deaths', 'Fr.Recovered', 'Frg.Confirmed', 'Frg.Deaths', 'Frg.Recovered')]
+t_africa
+
+t_oceania = apply(df_oceania[,-1], FUN = sum, MARGIN = 2)
+t_oceania$Region = 'Oceania'
+t_oceania = as.data.frame(t_oceania)
+t_oceania$Fr.Deaths = round(t_oceania$Deaths / t_oceania$Confirmed, 4)
+t_oceania$Fr.Recovered = round(t_oceania$Recovered / t_oceania$Confirmed, 4)
+t_oceania = t_oceania[,c('Region','Confirmed','Deaths','Recovered', 'Fr.Deaths', 'Fr.Recovered', 'Frg.Confirmed', 'Frg.Deaths', 'Frg.Recovered')]
+t_oceania
+
+t_north_america = apply(df_north_america[,-1], FUN = sum, MARGIN = 2)
+t_north_america$Region = 'North America'
+t_north_america = as.data.frame(t_north_america)
+t_north_america$Fr.Deaths = round(t_north_america$Deaths / t_north_america$Confirmed, 4)
+t_north_america$Fr.Recovered = round(t_north_america$Recovered / t_north_america$Confirmed, 4)
+t_north_america = t_north_america[,c('Region','Confirmed','Deaths','Recovered', 'Fr.Deaths', 'Fr.Recovered', 'Frg.Confirmed', 'Frg.Deaths', 'Frg.Recovered')]
+t_north_america
+
+t_south_america = apply(df_south_america[,-1], FUN = sum, MARGIN = 2)
+t_south_america$Region = 'South America'
+t_south_america = as.data.frame(t_south_america)
+t_south_america$Fr.Deaths = round(t_south_america$Deaths / t_south_america$Confirmed, 4)
+t_south_america$Fr.Recovered = round(t_south_america$Recovered / t_south_america$Confirmed, 4)
+t_south_america = t_south_america[,c('Region','Confirmed','Deaths','Recovered', 'Fr.Deaths', 'Fr.Recovered', 'Frg.Confirmed', 'Frg.Deaths', 'Frg.Recovered')]
+t_south_america
+```
+
+### **By Regions** 
+
+```{r echo=FALSE}
+df_region = Reduce(function(...) merge(..., all = TRUE), list(t_asia, t_europe, t_africa, t_oceania, t_north_america, t_south_america))
+df_region
+```
+
+## **Graphics**
+
+```{r fig.align='center', echo=FALSE}
+barplot(c(1,fr.deaths,fr.recovered),
+        names.arg = c("Confirmed", "Deaths", "Recovered"),
+        col = c("firebrick1", "floralwhite", "forestgreen"),
+        main = "COVID-19 Global")
+
+abline(h = 0.5, col = "gold", lwd = 2)
+
+df_region_subset = df_region[,c('Frg.Confirmed', 'Fr.Deaths', 'Fr.Recovered')]
+
+barplot(as.matrix(df_region_subset), 
+        beside = TRUE,
+        legend.text = c('Asia','Europe','Africa','Oceania','North America','South America'),
+        args.legend = list(title = "Regions", x = "top"),
+        yaxt = 'n',
+        col = c('royalblue1','palegreen2','palegoldenrod','turquoise3','sienna1','mediumorchid1'),
+        main = "COVID-19 By Regions",
+        names.arg = c('Confirmed by \ntotal confirmed', 'Deaths by region', 'Recovered by region'))
+```
+
+### Max % Deaths
+
+```{r echo=FALSE}
+data[data$Fr.Deaths == max(data$Fr.Deaths),]
+```
+
+### Max % Recovered
+
+```{r echo=FALSE}
+data[data$Fr.Recovered == max(data$Fr.Recovered),]
+```

@@ -1,0 +1,640 @@
+---
+title: "Tarea 15"
+author: "Martin Santamaria"
+date: "25/3/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+Sys.setenv(RETICULATE_PYTHON = "/Python38")
+```
+
+<br>
+
+## Punto 1
+
+En una universidad, se sabe que el 25% de los alumnos realizan algún tipo de deporte. Se ha obtenido una muestra de 30 alumnos.
+
+a) Si llamamos X a la variable aleatoria que cuenta el número de alumnos que realizan algún tipo de deporte, ¿qué tipo de distribución sigue X?
+
+b) ¿Qué esperanza tiene X?
+
+c) ¿Y varianza?
+
+d) Calcula con R (o Python) la probabilidad de que más de 25 alumnos practiquen algún deporte.
+
+e) Calcula con R (o Python) la probabilidad de que exactamente 15 alumnos practiquen algún deporte.
+
+f) Calcula con R (o Python) la probabilidad de que de 10 alumnos o menos practiquen algún deporte.
+
+<br>
+
+#### a) Si llamamos X a la variable aleatoria que cuenta el número de alumnos que realizan algún tipo de deporte, ¿qué tipo de distribución sigue X?
+
+<br>
+
+Si consideramos como exito al hecho de realizar algún deporte, la variable aleatoria X sigue una distribución **Binomial** con parámetros 
+
+$$X \sim B(30,0.25)$$
+
+<br>
+
+#### b) ¿Qué esperanza tiene X?
+
+<br>
+
+La esperanza de una Binomial se calcula como $E(X) = np$
+
+```{r}
+n = 30
+p = 0.25
+e = n * p
+```
+
+La esperanza de $X$ es **`r e`**
+
+<br>
+
+#### c) ¿Y varianza?
+
+<br>
+
+La varianza de una binomial se calcula como $Var(X) = npq$ donde $q = 1 - p$
+
+```{r}
+n = 30
+p = 0.25
+q = 1 - p
+v = n * p * q
+```
+
+La varianza de $X$ es **`r v`**
+
+<br>
+
+#### d) Calcula con R (o Python) la probabilidad de que más de 25 alumnos practiquen algún deporte.
+
+<br>
+
+Hallar $P(X > 25)$
+
+<br>
+
+#### En `R`
+
+```{r}
+n = 30
+p = 0.25
+
+plot(0:n, dbinom(0:n, size = n, prob = p), xlab = '', ylab = '', main = "Función de densidad de B(30,0.25)")
+plot(0:n, pbinom(0:n, size = n, prob = p), xlab = '', ylab = '', main = "Función de distribución de B(30,0.25)")
+```
+
+```{r}
+# Primera forma
+1 - pbinom(25, size = n, prob = p)
+
+# Segunda forma
+sum(dbinom(26:n, size = n, prob = p))
+
+# Tercera forma
+1 - sum(dbinom(0:25, size = n, prob = p))
+```
+
+<br>
+
+#### En `Python`
+
+```{python}
+from scipy.stats import binom
+import numpy as np
+
+n = 30
+p = 0.25
+rv = binom(n,p)
+
+# Primera forma
+1 - rv.cdf(25)
+
+# Segunda forma
+np.sum(rv.pmf(np.arange(26,n+1)))
+
+# Tercera forma
+1 - np.sum(rv.pmf(np.arange(0,26)))
+```
+
+<br>
+
+#### e) Calcula con R (o Python) la probabilidad de que exactamente 15 alumnos practiquen algún deporte.
+
+<br>
+
+Hallar $P(X = 25)$
+
+<br>
+
+#### En `R`
+
+```{r}
+dbinom(15, size = n, prob = p)
+```
+
+#### En `Python`
+
+```{python}
+rv.pmf(15)
+```
+
+<br>
+
+#### f) Calcula con R (o Python) la probabilidad de que de 10 alumnos o menos practiquen algún deporte.
+
+<br>
+
+Hallar $P(X <= 10)$
+
+<br>
+
+#### En `R`
+
+```{r}
+# Primera forma
+pbinom(10, size = n, prob = p)
+
+# Segunda forma
+sum(dbinom(0:10, size = n, prob = p))
+
+# Tercera forma
+1 - sum(dbinom(11:n, size = n, prob = p))
+```
+
+<br>
+
+#### En `Python`
+
+```{python}
+# Primera forma
+rv.cdf(10)
+
+# Segunda forma
+np.sum(rv.pmf(np.arange(0, 11)))
+
+# Tercera forma
+1 - np.sum(rv.pmf(np.arange(11,n+1)))
+```
+
+<br>
+
+## Punto 2
+
+El número medio de accidentes de coche en la ciudad de Mahón en 2 meses es de 2 accidentes.
+
+a) ¿Qué distribución sigue la v.a. que cuenta el número de accidentes en 2 meses?
+
+b) Calcula la esperanza
+
+c) Calcula con R (o Python) la probabilidad de que no ocurra ningún accidente en 2 meses.
+
+<br>
+
+#### a) ¿Qué distribución sigue la v.a. que cuenta el número de accidentes en 2 meses?
+
+<br>
+
+La variable aleatoria $X$ sigue una distribución de **Poisson** con parámetro $\lambda = 2$
+
+<br>
+
+$$X\sim \text{Po}(2)$$
+
+#### b) Calcula la esperanza
+
+<br>
+
+La esperanza de una Poisson es $E(X) = \lambda$
+
+```{r}
+lam = 2
+```
+
+<br>
+
+La esperanza de $X$ es **`r lam`**
+
+<br>
+
+#### c) Calcula con R (o Python) la probabilidad de que no ocurra ningún accidente en 2 meses
+
+<br>
+
+Hallar $P(X = 0)$
+
+<br>
+
+#### En `R`
+
+```{r}
+dpois(0, lambda = 2)
+```
+
+<br>
+
+#### En `Python`
+
+```{python}
+from scipy.stats import poisson
+
+poisson.pmf(0, mu = 2)
+```
+
+<br>
+
+## Punto 3
+
+El 40% de un pueblo a las afueras de la ciudad de Pensilvania ve un concurso que dan por la tele. El concurso llama por teléfono a 15 personas del pueblo elegidas al azar. ¿De qué distribución se trata?
+
+<br>
+
+Se trata de una variable aleatoria $X$ que sigue una distribución **Binomial** con parámetros $n = 15$ y $p = 0.4$
+
+<br>
+
+$$X \sim \text{B}(15,0.4)$$
+
+<br>
+
+## Punto 4
+
+En un bol muy grande tenemos, en total, 70 fresas, de entre las cuales 10 están podridas. Tomando un puñado de 20 fresas al azar y sin reemplazar ninguna de ellas, ¿qué distribución sigue la v.a. que cuenta el número de fresas podridas?
+
+Da también la esperanza y la varianza de esta variable aleatoria.
+
+<br>
+
+La variable aleatoria $X$ sigue una distribución **Hipergeométrica** de parámetros $M = 10$, $N = 60$ y $k = 20$
+
+<br>
+
+$$X\sim \text{H}(10,60,20)$$
+
+<br>
+
+La esperanza de una Hipergeométrica se calcula como $E(X) = \frac{kM}{M + N}$
+
+<br>
+
+La varianza de una Hipergeométrica se calcula como $Var(X) = \frac{kMN}{(M + N)^2} \cdot \frac{M + N - k}{M + N - 1}$
+
+```{r}
+M = 10
+N = 60
+k = 20
+e = (k * M) / (M + N)
+v = ((k * M * N) / (M + N)^2) * ((M + N - k) / (M + N - 1))
+```
+
+<br>
+
+La esperanza de $X$ es **`r e`**
+
+<br>
+
+La varianza de $X$ es **`r v`**
+
+<br>
+
+Verificamos en `Python`
+
+```{python}
+from scipy.stats import hypergeom
+
+M = 70 
+n = 10 
+N = 20
+rv = hypergeom(M, n, N)
+mean, var = rv.stats(moments = 'mv')
+
+print(f"Media {mean}")
+print(f"Varianza {var}")
+```
+
+<br>
+
+## Punto 5
+
+Un test de matemáticas consta de 200 preguntas de verdadero o falso. Para una persona que respondiese al azar, ¿qué distribución seguiría la v.a. que cuenta el número de preguntas acertadas?
+
+Da también la esperanza y la varianza de esta variable aleatoria.
+
+<br>
+
+La variable aleatoria $X$ sigue una distribución **Binomial** de parámetros $n = 200$ y $p = \frac{1}{2}$ siempre y cuando las preguntas sean independientes entre si.
+
+<br>
+
+$$X\sim \text{B}(200,0.5)$$
+
+<br>
+
+La esperanza de una Binomial es $E(X) = np$
+
+<br>
+
+La varianza de una Binomial se calcula como $Var(X) = npq$
+
+```{r}
+n = 200
+p = 0.5
+q = 1 - p
+e = n * p
+v = n * p * q
+```
+
+<br>
+
+La esperanza de $X$ es **`r e`**
+
+<br>
+
+La varianza de $X$ es **`r v`**
+
+<br>
+
+Verificamos en `Python`
+
+```{python}
+from scipy.stats import binom
+
+n = 200
+p = 0.5 
+rv = binom(n,p)
+mean, var = rv.stats(moments = 'mv')
+
+print(f"Media {mean}")
+print(f"Varianza {var}")
+```
+
+<br>
+
+## Punto 6
+
+Un test de matemáticas consta de 200 preguntas. Cada pregunta consta de 4 posibles respuestas con solo una correcta. Para una persona que respondiese al azar, ¿qué distribución seguiría la v.a. que cuenta el número de preguntas acertadas?
+
+Da también la esperanza y la varianza de esta variable aleatoria.
+
+<br>
+
+La variable aleatoria $X$ sigue una distribución **Binomial** de parámetros $n = 200$ y $p = \frac{1}{4}$ siempre y cuando las preguntas sean independientes entre si.
+
+<br>
+
+$$X\sim \text{B}(200,0.25)$$
+
+<br>
+
+La esperanza de una Binomial es $E(X) = np$
+
+<br>
+
+La varianza de una Binomial se calcula como $Var(X) = npq$
+
+```{r}
+n = 200
+p = 0.25
+q = 1 - p
+e = n * p
+v = n * p * q
+```
+
+<br>
+
+La esperanza de $X$ es **`r e`**
+
+<br>
+
+La varianza de $X$ es **`r v`**
+
+<br>
+
+Verificamos en `Python`
+
+```{python}
+from scipy.stats import binom
+
+n = 200
+p = 0.25 
+rv = binom(n,p)
+mean, var = rv.stats(moments = 'mv')
+
+print(f"Media {mean}")
+print(f"Varianza {var}")
+```
+
+<br>
+
+## Punto 7
+
+Un test de matemáticas consta de 200 preguntas de verdadero o falso. Para una persona que respondiese al azar y por orden, ¿qué distribución seguiría la v.a. que cuenta el número de preguntas respondidas hasta el primer acierto?
+
+Da también la esperanza y la varianza de esta variable aleatoria.
+
+<br>
+
+La variable aleatoria $X$ sigue una distribución **Geométrica** de parámetro $p = \frac{1}{2}$ siempre y cuando las preguntas sean independientes entre si.
+
+<br>
+
+$$X\sim \text{Ge}(0.5)$$
+
+<br>
+
+Considerando el número de intentos, entonces la esperanza de una Geométrica es $E(X) = \frac{1}{p}$
+
+<br>
+
+La varianza de una Geométrica se calcula como $Var(X) = \frac{1-p}{p^2}$
+
+```{r}
+p = 0.5
+e = 1 / p
+v = (1 - p) / p^2
+```
+
+<br>
+
+La esperanza de $X$ es **`r e`**
+
+<br>
+
+La varianza de $X$ es **`r v`**
+
+<br>
+
+Verificamos en `Python`
+
+```{python}
+from scipy.stats import geom
+
+p = 0.5 
+rv = geom(p)
+mean, var = rv.stats(moments = 'mv')
+
+print(f"Media {mean}")
+print(f"Varianza {var}")
+```
+
+<br>
+
+## Punto 8
+
+Para evitar ser arrestado al pasar el control de seguridad, un viajero ha colocado 7 pastillas de droga en una botella que contiene 14 píldoras de vitaminas, las cuales son muy similares a las otras. Si el policía de turno selecciona 4 pastillas aleatoriamente para analizarlas, ¿qué distribución sigue la v.a. que cuenta el número de pastillas de droga?
+
+<br>
+
+La variable aleatoria $X$ sigue una distribución **Hipergeométrica** de parámetros $M = 7$, $N = 14$ y $k = 4$
+
+<br>
+
+$$X\sim \text{H}(7,14,4)$$
+
+
+
+<br>
+
+## Punto 9
+
+Un servicio dedicado a la reparación de aires acondicionados recibe de media 27 llamadas diarias. ¿Qué distribución sigue la v.a. que cuenta el número de llamadas diarias?
+
+<br>
+
+La variable aleatoria $X$ sigue una distribución de **Poisson** con parámetro $\lambda = 27$
+
+<br>
+
+$$X\sim \text{Po}(27)$$
+
+<br>
+
+## Punto 10
+
+Se lanza 53 veces un dado. ¿Qué distribución sigue la v.a. que cuenta cuántas veces ha salido un número impar? ¿Y la v.a. que cuenta el número de veces que ha salido un número par? ¿Y la v.a. que cuenta las veces que hemos obtenido exactamente el número "5"?
+
+<br>
+
+Para todos los casos, las variables aleatorias $X$ siguen una distribución **Binomial**
+
+<br>
+
+En el primero caso tenemos como suceso exitoso el hecho de sacar un número impar. Entonces $p = \frac{1}{2}$ y $X \sim \text{B}(53,0.5)$ 
+
+<br>
+
+El segundo caso es igual al primero, salvo que ahora el suceso exitoso pasa a ser el hecho de sacar un número par. Por tanto, $p = \frac{1}{2}$ y $X \sim \text{B}(53,0.5)$
+
+<br>
+
+En el tercer caso, el suceso exitoso es sacar un 5 y fracaso si sale cualquier otro número. Entonces $p = \frac{1}{6}$ y $X \sim \text{B}\left(53,\frac{1}{6}\right)$ 
+
+<br>
+
+## Punto 11
+
+El precio medio del litro de gasolina durante el próximo año se estima que puede oscilar entre 1.09€ y 2.53€. ¿De qué distribución de probabilidad se trata?
+
+Da la esperanza
+
+<br>
+
+La variable aleatoria $X$ sigue una distribución **Uniforme** con parámetros $a = 1.09$ y $b = 2.53$
+
+<br>
+
+$$X\sim \text{U}(1.09,2.53)$$
+
+<br>
+
+La esperanza de una distribución Uniforme se calcula como $E(X) = \frac{a+b}{2}$
+
+```{r}
+a = 1.09
+b = 2.53
+e = (a + b) / 2
+```
+
+<br>
+
+La esperanza de $X$ es **`r e`**
+
+<br>
+
+Verificamos en `Python`
+
+```{python}
+from scipy.stats import uniform
+
+a = 1.09 
+b = 2.53
+loc = a
+scale = b - a
+rv = uniform(loc, scale)
+mean = rv.stats(moments = 'm')
+
+print(f"Media {mean}")
+```
+
+<br>
+
+## Punto 12
+
+En una tienda del centro comercial, el tiempo medio de cola para poder pagar en caja es de 7 minutos. ¿De qué distribución de probabilidad se trata?
+
+Da la esperanza y varianza
+
+<br>
+
+La variable aleatoria $X$ sigue una distribución **Exponencial** con parámetro $\lambda = 7$
+
+<br>
+
+$$X\sim \text{Exp}(7)$$
+
+<br>
+
+La esperanza de una distribución Exponencial se calcula como $E(X) = \frac{1}{\lambda}$
+
+<br>
+
+La varianza de una Exponencial se calcula como $Var(X) = \frac{1}{\lambda^2}$
+
+```{r}
+lam = 7
+e = 1 / lam
+v = 1 / lam^2
+```
+
+<br>
+
+La esperanza de $X$ es **`r e`**
+
+<br>
+
+La varianza de $X$ es **`r v`**
+
+<br>
+
+Verificamos en `Python`
+
+```{python}
+from scipy.stats import expon
+
+lam = 7 
+rv = expon(scale = 1 / lam)
+mean, var = rv.stats(moments = 'mv')
+
+print(f"Media {mean}")
+print(f"Varianza {var}")
+```
